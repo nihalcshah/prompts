@@ -1,7 +1,7 @@
 import { createClient } from '@/utils/supabase/server'
-import PublicClient from './public/public-client'
+import PublicClient from './public-client'
 
-export default async function Home() {
+export default async function PublicPage() {
   const supabase = await createClient()
   
   // Fetch public prompts from Supabase
