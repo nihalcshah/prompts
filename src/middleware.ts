@@ -87,7 +87,7 @@ export async function middleware(request: NextRequest) {
   if (user && request.nextUrl.pathname.startsWith("/admin")) {
     try {
       // Check if profile exists
-      const { data: existingProfile, error: fetchError } = await supabase
+      const { error: fetchError } = await supabase
         .from("profiles")
         .select("id")
         .eq("user_id", user.id)

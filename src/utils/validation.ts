@@ -1,92 +1,104 @@
 // Form validation utilities for admin forms
 
 export interface ValidationRule {
-  required?: boolean
-  minLength?: number
-  maxLength?: number
-  pattern?: RegExp
-  custom?: (value: any) => string | null
+  required?: boolean;
+  minLength?: number;
+  maxLength?: number;
+  pattern?: RegExp;
+  custom?: (value: string) => string | null;
 }
 
 export interface ValidationRules {
-  [key: string]: ValidationRule
+  [key: string]: ValidationRule;
 }
 
 export interface ValidationErrors {
-  [key: string]: string
+  [key: string]: string;
 }
 
 /**
  * Validates a single field based on its rules
  */
-export function validateField(value: any, rules: ValidationRule): string | null {
+export function validateField(
+  value: string,
+  rules: ValidationRule
+): string | null {
   // Required validation
-  if (rules.required && (!value || (typeof value === 'string' && !value.trim()))) {
-    return 'This field is required'
+  if (
+    rules.required &&
+    (!value || (typeof value === "string" && !value.trim()))
+  ) {
+    return "This field is required";
   }
 
   // Skip other validations if field is empty and not required
-  if (!value || (typeof value === 'string' && !value.trim())) {
-    return null
+  if (!value || (typeof value === "string" && !value.trim())) {
+    return null;
   }
 
-  const stringValue = String(value).trim()
+  const stringValue = String(value).trim();
 
   // Min length validation
   if (rules.minLength && stringValue.length < rules.minLength) {
-    return `Must be at least ${rules.minLength} characters long`
+    return `Must be at least ${rules.minLength} characters long`;
   }
 
   // Max length validation
   if (rules.maxLength && stringValue.length > rules.maxLength) {
-    return `Must be no more than ${rules.maxLength} characters long`
+    return `Must be no more than ${rules.maxLength} characters long`;
   }
 
   // Pattern validation
   if (rules.pattern && !rules.pattern.test(stringValue)) {
-    return 'Invalid format'
+    return "Invalid format";
   }
 
   // Custom validation
   if (rules.custom) {
-    return rules.custom(value)
+    return rules.custom(value);
   }
 
-  return null
+  return null;
 }
 
 /**
  * Validates an entire form based on validation rules
  */
-export function validateForm(data: Record<string, any>, rules: ValidationRules): ValidationErrors {
-  const errors: ValidationErrors = {}
+export function validateForm(
+  data: Record<string, string>,
+  rules: ValidationRules
+): ValidationErrors {
+  const errors: ValidationErrors = {};
 
   for (const [field, fieldRules] of Object.entries(rules)) {
-    const error = validateField(data[field], fieldRules)
+    const error = validateField(data[field], fieldRules);
     if (error) {
-      errors[field] = error
+      errors[field] = error;
     }
   }
 
-  return errors
+  return errors;
 }
 
 /**
  * Validates an entire form and returns validation result with isValid flag
  */
-export function validateFormWithResult(data: Record<string, any>, rules: ValidationRules): { isValid: boolean; errors: ValidationErrors } {
-  const errors = validateForm(data, rules)
+export function validateFormWithResult(
+  data: Record<string, string>,
+  rules: ValidationRules
+): { isValid: boolean; errors: ValidationErrors } {
+  const errors = validateForm(data, rules);
   return {
     isValid: Object.keys(errors).length === 0,
-    errors
-  }
+    errors,
+  };
 }
 
 /**
  * Checks if there are any validation errors
  */
 export function hasValidationErrors(errors: ValidationErrors): boolean {
-  return Object.keys(errors).length > 0
+  return Object.keys(errors).length > 0;
 }
 
 /**
@@ -98,8 +110,8 @@ export const ValidationPatterns = {
   tag: /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
   url: /^https?:\/\/.+/,
   alphanumeric: /^[a-zA-Z0-9]+$/,
-  noSpecialChars: /^[a-zA-Z0-9\s-_]+$/
-}
+  noSpecialChars: /^[a-zA-Z0-9\s-_]+$/,
+};
 
 /**
  * Common validation rules for different field types
@@ -109,21 +121,21 @@ export const CommonValidationRules = {
     required: true,
     minLength: 3,
     maxLength: 200,
-    pattern: ValidationPatterns.noSpecialChars
+    pattern: ValidationPatterns.noSpecialChars,
   },
   content: {
     required: true,
     minLength: 10,
-    maxLength: 10000
+    maxLength: 10000,
   },
   description: {
-    maxLength: 500
+    maxLength: 500,
   },
   categoryName: {
     required: true,
     minLength: 2,
     maxLength: 50,
-    pattern: ValidationPatterns.noSpecialChars
+    pattern: ValidationPatterns.noSpecialChars,
   },
   tagName: {
     required: true,
@@ -132,28 +144,28 @@ export const CommonValidationRules = {
     pattern: ValidationPatterns.tag,
     custom: (value: string) => {
       if (value && value !== value.toLowerCase()) {
-        return 'Tag names must be lowercase'
+        return "Tag names must be lowercase";
       }
-      if (value && value.includes(' ')) {
-        return 'Tag names cannot contain spaces (use hyphens instead)'
+      if (value && value.includes(" ")) {
+        return "Tag names cannot contain spaces (use hyphens instead)";
       }
-      return null
-    }
+      return null;
+    },
   },
   email: {
     required: true,
-    pattern: ValidationPatterns.email
+    pattern: ValidationPatterns.email,
   },
   url: {
-    pattern: ValidationPatterns.url
-  }
-}
+    pattern: ValidationPatterns.url,
+  },
+};
 
 /**
  * Sanitizes input by trimming whitespace and removing potentially harmful characters
  */
 export function sanitizeInput(value: string): string {
-  return value.trim().replace(/[<>"'&]/g, '')
+  return value.trim().replace(/[<>"'&]/g, "");
 }
 
 /**
@@ -163,10 +175,10 @@ export function formatTagName(value: string): string {
   return value
     .toLowerCase()
     .trim()
-    .replace(/\s+/g, '-')
-    .replace(/[^a-z0-9-]/g, '')
-    .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '')
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9-]/g, "")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
 }
 
 /**
@@ -175,34 +187,37 @@ export function formatTagName(value: string): string {
 export function formatCategoryName(value: string): string {
   return value
     .trim()
-    .replace(/\s+/g, ' ')
-    .replace(/[^a-zA-Z0-9\s-_]/g, '')
-    .split(' ')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(' ')
+    .replace(/\s+/g, " ")
+    .replace(/[^a-zA-Z0-9\s-_]/g, "")
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
 }
 
 /**
  * Validates and formats an array of tags
  */
-export function validateTags(tags: string[]): { valid: string[], errors: string[] } {
-  const valid: string[] = []
-  const errors: string[] = []
+export function validateTags(tags: string[]): {
+  valid: string[];
+  errors: string[];
+} {
+  const valid: string[] = [];
+  const errors: string[] = [];
 
   for (const tag of tags) {
-    const formatted = formatTagName(tag)
+    const formatted = formatTagName(tag);
     if (!formatted) {
-      errors.push(`Invalid tag: "${tag}"`)
-      continue
+      errors.push(`Invalid tag: "${tag}"`);
+      continue;
     }
-    
-    const error = validateField(formatted, CommonValidationRules.tagName)
+
+    const error = validateField(formatted, CommonValidationRules.tagName);
     if (error) {
-      errors.push(`Tag "${tag}": ${error}`)
+      errors.push(`Tag "${tag}": ${error}`);
     } else {
-      valid.push(formatted)
+      valid.push(formatted);
     }
   }
 
-  return { valid, errors }
+  return { valid, errors };
 }

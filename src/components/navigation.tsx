@@ -122,7 +122,7 @@ export default function Navigation({ initialUser }: NavigationProps) {
                 href="/"
                 className="text-xl font-semibold text-white hover:text-neutral-300 transition-colors duration-200"
               >
-                Nihal's Prompts
+                Nihal&apos;s Prompts
               </Link>
             </div>
 
@@ -273,7 +273,7 @@ export default function Navigation({ initialUser }: NavigationProps) {
               href="/"
               className="text-xl font-semibold text-white hover:text-neutral-300 transition-colors duration-200"
             >
-              Nihal's Prompts
+              Nihal&apos;s Prompts
             </Link>
           </div>
 

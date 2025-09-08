@@ -3,6 +3,20 @@ import { createClient } from "@/utils/supabase/server";
 import { getCategories, getTags } from "@/app/actions/admin";
 import CreatePromptForm from "./create-prompt-form";
 
+interface Category {
+  id: string;
+  name: string;
+  description?: string;
+  created_at: string;
+}
+
+interface Tag {
+  id: string;
+  name: string;
+  description?: string;
+  created_at: string;
+}
+
 export const metadata = {
   title: "Create Prompt - Admin",
   description: "Create a new prompt in the admin panel",
@@ -40,7 +54,10 @@ export default async function CreatePromptPage() {
         </p>
       </div>
 
-      <CreatePromptForm categories={categories} tags={tags} />
+      <CreatePromptForm
+        categories={categories as Category[]}
+        tags={tags as Tag[]}
+      />
     </div>
   );
 }

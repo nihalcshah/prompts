@@ -47,7 +47,7 @@ export default function PromptsClient({
   const [selectedPrompts, setSelectedPrompts] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -84,7 +84,7 @@ export default function PromptsClient({
       } else {
         setError(result.error || "Failed to delete prompt");
       }
-    } catch (err) {
+    } catch {
       setError("An unexpected error occurred");
     } finally {
       setIsLoading(false);
@@ -110,7 +110,7 @@ export default function PromptsClient({
       } else {
         setError(result.error || "Failed to delete prompts");
       }
-    } catch (err) {
+    } catch {
       setError("An unexpected error occurred");
     } finally {
       setIsLoading(false);
@@ -135,7 +135,7 @@ export default function PromptsClient({
       } else {
         setError(result.error || "Failed to update prompts");
       }
-    } catch (err) {
+    } catch {
       setError("An unexpected error occurred");
     } finally {
       setIsLoading(false);

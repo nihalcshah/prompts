@@ -1,7 +1,6 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
 
 // Email allowlist - only these emails can sign up
 const ALLOWED_EMAILS = ["nihalcshah@gmail.com"];

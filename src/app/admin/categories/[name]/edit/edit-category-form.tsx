@@ -99,7 +99,8 @@ export default function EditCategoryForm({
             required
           />
           <p className="text-neutral-500 text-sm mt-1">
-            This will update all prompts that currently use "{currentCategory}"
+            This will update all prompts that currently use &quot;
+            {currentCategory}&quot;
           </p>
         </div>
 
@@ -165,7 +166,8 @@ export default function EditCategoryForm({
               <h4 className="text-yellow-300 font-medium text-sm">Important</h4>
               <p className="text-yellow-200/80 text-sm mt-1">
                 Updating this category will change it for all prompts that
-                currently use "{currentCategory}". This action cannot be undone.
+                currently use &quot;{currentCategory}&quot;. This action cannot
+                be undone.
               </p>
             </div>
           </div>

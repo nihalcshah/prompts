@@ -59,7 +59,7 @@ export default function SignInPage() {
         router.push("/admin");
         router.refresh();
       }
-    } catch (err) {
+    } catch {
       setError("An unexpected error occurred");
     } finally {
       setIsLoading(false);
@@ -109,7 +109,7 @@ export default function SignInPage() {
           setMessage(result.message);
         }
       }
-    } catch (err) {
+    } catch {
       setError("An unexpected error occurred");
     } finally {
       setIsLoading(false);
@@ -136,7 +136,7 @@ export default function SignInPage() {
       if (error) {
         setError(error.message);
       }
-    } catch (err) {
+    } catch {
       setError("An unexpected error occurred");
     } finally {
       setIsLoading(false);

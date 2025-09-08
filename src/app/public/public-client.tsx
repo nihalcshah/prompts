@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import { GiEmptyChessboard, GiEmptyHourglass } from "react-icons/gi";
+import { GiEmptyHourglass } from "react-icons/gi";
 interface Prompt {
   id: string;
   title: string;
@@ -13,6 +13,10 @@ interface Prompt {
   author: string;
   author_name?: string;
   created_at: string;
+  prompt_categories?: {
+    categories: { id: string; name: string; description?: string };
+  }[];
+  prompt_tags?: { tags: { id: string; name: string } }[];
 }
 
 interface PublicClientProps {
@@ -23,10 +27,19 @@ export default function PublicClient({ prompts }: PublicClientProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
 
+  // Transform prompts to flatten categories and tags
+  const transformedPrompts = useMemo(() => {
+    return prompts.map((prompt) => ({
+      ...prompt,
+      categories: prompt.prompt_categories?.map((pc) => pc.categories) || [],
+      tags: prompt.prompt_tags?.map((pt) => pt.tags.name) || [],
+    }));
+  }, [prompts]);
+
   // Get unique categories from prompts
   const categories = useMemo(() => {
     const cats = new Set(["All"]);
-    prompts.forEach((prompt) => {
+    transformedPrompts.forEach((prompt) => {
       if (prompt.categories && prompt.categories.length > 0) {
         prompt.categories.forEach((category) => {
           cats.add(category.name);
@@ -34,11 +47,13 @@ export default function PublicClient({ prompts }: PublicClientProps) {
       }
     });
     return Array.from(cats);
-  }, [prompts]);
+  }, [transformedPrompts]);
+
+  console.log(prompts, categories);
 
   // Filter prompts based on search and category
   const filteredPrompts = useMemo(() => {
-    return prompts.filter((prompt) => {
+    return transformedPrompts.filter((prompt) => {
       const matchesSearch =
         searchTerm === "" ||
         prompt.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -55,7 +70,7 @@ export default function PublicClient({ prompts }: PublicClientProps) {
 
       return matchesSearch && matchesCategory;
     });
-  }, [prompts, searchTerm, selectedCategory]);
+  }, [transformedPrompts, searchTerm, selectedCategory]);
 
   return (
     <div className="min-h-screen bg-transparent">
@@ -63,7 +78,7 @@ export default function PublicClient({ prompts }: PublicClientProps) {
         {/* Search and Filter Bar */}
         <div className="mb-12">
           <div className="flex flex-col lg:flex-row gap-6 items-center justify-between">
-            <div className="relative flex-1 max-w-xl">
+            <div className="relative flex-1 w-full lg:max-w-xl">
               <div className="flex items-center w-full rounded-2xl border border-neutral-700/50 bg-neutral-950/30 backdrop-blur-sm group focus-within:ring-2 focus-within:ring-white/50 transition-all duration-300">
                 <svg
                   className="h-4 w-4 text-neutral-400 ml-4 mr-2"
@@ -88,7 +103,7 @@ export default function PublicClient({ prompts }: PublicClientProps) {
               </div>
             </div>
 
-            <div className="flex gap-3 flex-wrap justify-center">
+            {/* <div className="flex gap-3 flex-wrap justify-center">
               {categories.map((category) => (
                 <button
                   key={category}
@@ -102,7 +117,7 @@ export default function PublicClient({ prompts }: PublicClientProps) {
                   {category}
                 </button>
               ))}
-            </div>
+            </div> */}
           </div>
         </div>
 

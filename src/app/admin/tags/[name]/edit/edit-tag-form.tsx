@@ -5,6 +5,13 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { updateTag } from "@/app/actions/admin";
 
+interface Tag {
+  id: string;
+  name: string;
+  description?: string;
+  created_at: string;
+}
+
 interface EditTagFormProps {
   currentTag: string;
 }
@@ -25,7 +32,9 @@ export default function EditTagForm({ currentTag }: EditTagFormProps) {
         const { getTags } = await import("@/app/actions/admin");
         const result = await getTags();
         if (result.success) {
-          const tag = result.data.find((t: any) => t.name === currentTag);
+          const tag = (result.data as Tag[]).find(
+            (t: Tag) => t.name === currentTag
+          );
           if (tag) {
             setFormData({
               name: tag.name,
@@ -151,7 +160,8 @@ export default function EditTagForm({ currentTag }: EditTagFormProps) {
             </h3>
             <p className="text-yellow-200/80 text-sm">
               Changing the tag name will update all prompts that currently use
-              the tag "{currentTag}" to use "{formData.name}" instead.
+              the tag &quot;{currentTag}&quot; to use &quot;{formData.name}
+              &quot; instead.
             </p>
           </div>
         )}

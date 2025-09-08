@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import FormField, { FormError } from "@/components/form-field";
+import FormField from "@/components/form-field";
 import {
   validateFormWithResult,
   CommonValidationRules,
@@ -21,12 +21,15 @@ export default function CreateTagForm() {
   const [error, setError] = useState("");
   const router = useRouter();
 
-  const handleFieldChange = (name: string, value: string) => {
-    let processedValue = value;
+  const handleFieldChange = (
+    name: string,
+    value: string | boolean | number
+  ) => {
+    let processedValue = String(value);
 
     // Auto-format tag name as user types
     if (name === "name") {
-      processedValue = formatTagName(value);
+      processedValue = formatTagName(String(value));
     }
 
     setFormData((prev) => ({ ...prev, [name]: processedValue }));
@@ -67,7 +70,7 @@ export default function CreateTagForm() {
       } else {
         setError(result.error || "Failed to create tag");
       }
-    } catch (err) {
+    } catch {
       setError("An unexpected error occurred");
     } finally {
       setIsLoading(false);

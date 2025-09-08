@@ -60,7 +60,7 @@ export default async function CategoriesPage() {
                   Total Categories
                 </p>
                 <p className="text-2xl font-bold text-white mt-1">
-                  {categories.length}
+                  {Array.isArray(categories) ? categories.length : 0}
                 </p>
               </div>
               <div className="p-3 bg-purple-500/20 rounded-lg">
@@ -88,7 +88,9 @@ export default async function CategoriesPage() {
                   Most Used
                 </p>
                 <p className="text-lg font-semibold text-white mt-1">
-                  {categories.length > 0 ? categories[0].name : "None"}
+                  {Array.isArray(categories) && categories.length > 0
+                    ? categories[0].name
+                    : "None"}
                 </p>
               </div>
               <div className="p-3 bg-green-500/20 rounded-lg">
@@ -145,7 +147,9 @@ export default async function CategoriesPage() {
         </div>
 
         {/* Categories List */}
-        <CategoriesClient categories={categories} />
+        <CategoriesClient
+          categories={Array.isArray(categories) ? categories : []}
+        />
       </div>
     </div>
   );

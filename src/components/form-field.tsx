@@ -7,8 +7,8 @@ interface FormFieldProps {
   label: string;
   name: string;
   type?: "text" | "email" | "textarea" | "select" | "checkbox";
-  value: any;
-  onChange: (name: string, value: any) => void;
+  value: string | boolean | number;
+  onChange: (name: string, value: string | boolean | number) => void;
   validation?: ValidationRule;
   placeholder?: string;
   required?: boolean;
@@ -40,12 +40,13 @@ export default function FormField({
   // Validate field when value changes
   useEffect(() => {
     if (touched && validation) {
-      const validationError = validateField(value, validation);
+      const stringValue = typeof value === "string" ? value : String(value);
+      const validationError = validateField(stringValue, validation);
       setError(validationError);
     }
   }, [value, validation, touched]);
 
-  const handleChange = (newValue: any) => {
+  const handleChange = (newValue: string | boolean | number) => {
     onChange(name, newValue);
     if (!touched) {
       setTouched(true);
@@ -55,7 +56,8 @@ export default function FormField({
   const handleBlur = () => {
     setTouched(true);
     if (validation) {
-      const validationError = validateField(value, validation);
+      const stringValue = typeof value === "string" ? value : String(value);
+      const validationError = validateField(stringValue, validation);
       setError(validationError);
     }
   };
@@ -73,7 +75,7 @@ export default function FormField({
           <textarea
             id={name}
             name={name}
-            value={value || ""}
+            value={typeof value === "string" ? value : String(value || "")}
             onChange={(e) => handleChange(e.target.value)}
             onBlur={handleBlur}
             placeholder={placeholder}
@@ -89,7 +91,7 @@ export default function FormField({
           <select
             id={name}
             name={name}
-            value={value || ""}
+            value={typeof value === "string" ? value : String(value || "")}
             onChange={(e) => handleChange(e.target.value)}
             onBlur={handleBlur}
             required={required}
@@ -112,7 +114,7 @@ export default function FormField({
               type="checkbox"
               id={name}
               name={name}
-              checked={value || false}
+              checked={typeof value === "boolean" ? value : Boolean(value)}
               onChange={(e) => handleChange(e.target.checked)}
               onBlur={handleBlur}
               disabled={disabled}
@@ -130,7 +132,7 @@ export default function FormField({
             type={type}
             id={name}
             name={name}
-            value={value || ""}
+            value={typeof value === "string" ? value : String(value || "")}
             onChange={(e) => handleChange(e.target.value)}
             onBlur={handleBlur}
             placeholder={placeholder}

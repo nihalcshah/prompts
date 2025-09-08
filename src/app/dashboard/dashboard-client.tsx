@@ -38,7 +38,7 @@ export default function DashboardClient({
       } else {
         setError(result.error || "Failed to update profile");
       }
-    } catch (err) {
+    } catch {
       setError("An unexpected error occurred");
     } finally {
       setIsLoading(false);
@@ -51,7 +51,7 @@ export default function DashboardClient({
       await supabase.auth.signOut();
       router.push("/signin");
       router.refresh();
-    } catch (err) {
+    } catch {
       setError("Failed to sign out");
     } finally {
       setIsLoading(false);

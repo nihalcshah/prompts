@@ -2,6 +2,13 @@ import { getTags } from "@/app/actions/admin";
 import TagsClient from "./tags-client";
 import Link from "next/link";
 
+interface Tag {
+  id: string;
+  name: string;
+  description?: string;
+  created_at: string;
+}
+
 export const metadata = {
   title: "Tags Management - Admin",
   description: "Manage tags for prompts in the admin panel",
@@ -10,7 +17,7 @@ export const metadata = {
 export default async function TagsPage() {
   // Fetch all tags
   const tagsResult = await getTags();
-  const tags = tagsResult.success ? tagsResult.data : [];
+  const tags = tagsResult.success ? (tagsResult.data as Tag[]) : [];
 
   return (
     <div className="p-6">

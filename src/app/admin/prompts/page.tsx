@@ -1,4 +1,9 @@
-import { getPrompts, getCategories, getTags } from "@/app/actions/admin";
+import {
+  getPrompts,
+  getCategories,
+  getTags,
+  type Prompt,
+} from "@/app/actions/admin";
 import PromptsClient from "./prompts-client";
 import Link from "next/link";
 
@@ -13,11 +18,32 @@ interface PageProps {
   searchParams: Promise<SearchParams>;
 }
 
+interface PromptFilters {
+  search?: string;
+  category?: string;
+  tag?: string;
+  isPublic?: boolean;
+}
+
+interface Category {
+  id: string;
+  name: string;
+  description?: string;
+  created_at: string;
+}
+
+interface Tag {
+  id: string;
+  name: string;
+  description?: string;
+  created_at: string;
+}
+
 export default async function PromptsPage({ searchParams }: PageProps) {
   const params = await searchParams;
 
   // Build filters
-  const filters: any = {};
+  const filters: PromptFilters = {};
   if (params.search) filters.search = params.search;
   if (params.category) filters.category = params.category;
   if (params.tag) filters.tag = params.tag;
@@ -45,9 +71,11 @@ export default async function PromptsPage({ searchParams }: PageProps) {
     );
   }
 
-  const prompts = promptsResult.data || [];
-  const categories = categoriesResult.success ? categoriesResult.data : [];
-  const tags = tagsResult.success ? tagsResult.data : [];
+  const prompts = (promptsResult.data as Prompt[]) || [];
+  const categories = categoriesResult.success
+    ? (categoriesResult.data as Category[])
+    : [];
+  const tags = tagsResult.success ? (tagsResult.data as Tag[]) : [];
 
   return (
     <div className="min-h-screen bg-black">
@@ -88,7 +116,7 @@ export default async function PromptsPage({ searchParams }: PageProps) {
               <div>
                 <p className="text-sm text-neutral-400">Public</p>
                 <p className="text-xl font-bold text-white">
-                  {prompts.filter((p: any) => p.is_public).length}
+                  {prompts.filter((p: Prompt) => p.is_public).length}
                 </p>
               </div>
             </div>
@@ -98,7 +126,7 @@ export default async function PromptsPage({ searchParams }: PageProps) {
               <div>
                 <p className="text-sm text-neutral-400">Private</p>
                 <p className="text-xl font-bold text-white">
-                  {prompts.filter((p: any) => !p.is_public).length}
+                  {prompts.filter((p: Prompt) => !p.is_public).length}
                 </p>
               </div>
             </div>

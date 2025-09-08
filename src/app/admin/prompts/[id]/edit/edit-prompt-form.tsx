@@ -71,7 +71,7 @@ export default function EditPromptForm({
         } else {
           setError(result.error || "Failed to update prompt");
         }
-      } catch (err) {
+      } catch {
         setError("An unexpected error occurred");
       }
     });

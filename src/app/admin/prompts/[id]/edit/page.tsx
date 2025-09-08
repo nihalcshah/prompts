@@ -1,7 +1,26 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
-import { getPrompt, getCategories, getTags } from "@/app/actions/admin";
+import {
+  getPrompt,
+  getCategories,
+  getTags,
+  type Prompt,
+} from "@/app/actions/admin";
 import EditPromptForm from "./edit-prompt-form";
+
+interface Category {
+  id: string;
+  name: string;
+  description?: string;
+  created_at: string;
+}
+
+interface Tag {
+  id: string;
+  name: string;
+  description?: string;
+  created_at: string;
+}
 
 export const metadata = {
   title: "Edit Prompt - Admin",
@@ -38,14 +57,16 @@ export default async function EditPromptPage({ params }: EditPromptPageProps) {
     redirect("/admin/prompts");
   }
 
-  const prompt = promptResult.data;
-  const categories = categoriesResult.success ? categoriesResult.data : [];
-  const tags = tagsResult.success ? tagsResult.data : [];
+  const prompt = promptResult.data as Prompt;
+  const categories = categoriesResult.success
+    ? (categoriesResult.data as Category[])
+    : [];
+  const tags = tagsResult.success ? (tagsResult.data as Tag[]) : [];
 
   // Debug logging
-  console.log('Edit page - prompt data:', JSON.stringify(prompt, null, 2));
-  console.log('Edit page - categories:', categories);
-  console.log('Edit page - prompt categories:', prompt?.categories);
+  console.log("Edit page - prompt data:", JSON.stringify(prompt, null, 2));
+  console.log("Edit page - categories:", categories);
+  console.log("Edit page - prompt categories:", prompt.categories);
 
   return (
     <div className="max-w-4xl mx-auto">

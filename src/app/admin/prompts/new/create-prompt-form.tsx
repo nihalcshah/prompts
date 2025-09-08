@@ -44,7 +44,7 @@ export default function CreatePromptForm({
     category: "",
     tags: [] as string[],
     notes: "",
-    is_public: false,
+    is_public: true,
   });
   const [newTag, setNewTag] = useState("");
   const [error, setError] = useState("");
@@ -66,7 +66,13 @@ export default function CreatePromptForm({
       notes: { maxLength: 1000 },
     };
 
-    const errors = validateForm(formData, validationRules);
+    const errors = validateForm({
+      title: formData.title,
+      content: formData.content, 
+      description: formData.description,
+      category: formData.category,
+      notes: formData.notes
+    }, validationRules);
 
     // Validate tags separately
     if (formData.tags.length > 0) {
@@ -100,7 +106,7 @@ export default function CreatePromptForm({
         } else {
           setError(result.error || "Failed to create prompt");
         }
-      } catch (err) {
+      } catch {
         setError("An unexpected error occurred");
       }
     });
@@ -143,7 +149,7 @@ export default function CreatePromptForm({
     }
   };
 
-  const handleFieldChange = (name: string, value: any) => {
+  const handleFieldChange = (name: string, value: string | boolean | number) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
     // Clear field error when user starts typing
     if (fieldErrors[name]) {

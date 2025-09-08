@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createCategory } from "@/app/actions/admin";
@@ -61,7 +61,7 @@ export default function CreateCategoryForm() {
       } else {
         setError(result.error || "Failed to create category");
       }
-    } catch (err) {
+    } catch {
       setError("An unexpected error occurred");
     } finally {
       setIsLoading(false);
@@ -78,7 +78,7 @@ export default function CreateCategoryForm() {
           name="name"
           type="text"
           value={formData.name}
-          onChange={handleFieldChange}
+          onChange={(name, value) => handleFieldChange(name, value.toString())}
           validation={CommonValidationRules.categoryName}
           placeholder="Enter category name (e.g., AI Tools, Writing, Marketing)"
           required
@@ -90,7 +90,7 @@ export default function CreateCategoryForm() {
           name="description"
           type="textarea"
           value={formData.description}
-          onChange={handleFieldChange}
+          onChange={(name, value) => handleFieldChange(name, value.toString())}
           validation={CommonValidationRules.description}
           placeholder="Describe what this category is for..."
           rows={3}
