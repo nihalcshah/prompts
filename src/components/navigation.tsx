@@ -10,24 +10,32 @@ interface NavigationProps {
   initialUser?: User | null;
 }
 
+interface Category {
+  id: string;
+  name: string;
+  description?: string;
+  created_at: string;
+}
+
 export default function Navigation({ initialUser }: NavigationProps) {
   const [user, setUser] = useState<User | null>(initialUser || null);
-  const [isLoading, setIsLoading] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isClient, setIsClient] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
+  const [categories, setCategories] = useState<Category[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const supabase = createClient();
 
   // Ensure we're on the client side before doing any client-specific operations
   useEffect(() => {
-    setIsClient(true);
+    setIsHydrated(true);
   }, []);
 
   useEffect(() => {
     // Only run client-side user fetching if we don't have an initial user
     // and we're confirmed to be on the client
-    if (!isClient) return;
+    if (!isHydrated) return;
 
     const getUser = async () => {
       const {
@@ -47,11 +55,11 @@ export default function Navigation({ initialUser }: NavigationProps) {
     });
 
     return () => subscription.unsubscribe();
-  }, [supabase.auth, initialUser, isClient]);
+  }, [supabase.auth, initialUser, isHydrated]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
-    if (!isClient) return;
+    if (!isHydrated) return;
 
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -69,7 +77,26 @@ export default function Navigation({ initialUser }: NavigationProps) {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isDropdownOpen, isClient]);
+  }, [isDropdownOpen, isHydrated]);
+
+  // Fetch categories
+  useEffect(() => {
+    if (!isHydrated) return;
+
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch("/api/categories");
+        if (response.ok) {
+          const data = await response.json();
+          setCategories(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, [isHydrated]);
 
   const handleSignOut = async () => {
     setIsLoading(true);
@@ -84,16 +111,16 @@ export default function Navigation({ initialUser }: NavigationProps) {
   };
 
   // Render consistent content during hydration
-  if (!isClient) {
+  if (!isHydrated) {
     return (
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-sm border-b border-gray-800">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-sm border-b border-neutral-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo/Brand */}
             <div className="flex items-center">
               <Link
                 href="/"
-                className="text-xl font-semibold text-white hover:text-gray-300 transition-colors duration-200"
+                className="text-xl font-semibold text-white hover:text-neutral-300 transition-colors duration-200"
               >
                 Nihal's Prompts
               </Link>
@@ -104,7 +131,7 @@ export default function Navigation({ initialUser }: NavigationProps) {
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <svg
-                    className="h-5 w-5 text-gray-400"
+                    className="h-5 w-5 text-neutral-400"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -120,7 +147,7 @@ export default function Navigation({ initialUser }: NavigationProps) {
                 <input
                   type="text"
                   placeholder="Search prompts..."
-                  className="block w-full pl-10 pr-3 py-2 border border-gray-700 rounded-lg bg-gray-900/50 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-white transition-colors duration-200 text-sm"
+                  className="block w-full pl-10 pr-3 py-2 border border-neutral-700 rounded-lg bg-neutral-950/50 text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-white transition-colors duration-200 text-sm"
                 />
               </div>
             </div>
@@ -129,15 +156,15 @@ export default function Navigation({ initialUser }: NavigationProps) {
             <div className="flex items-center space-x-4">
               {initialUser ? (
                 <div className="relative">
-                  <button className="flex items-center space-x-2 hover:bg-gray-800/50 rounded-lg px-3 py-2 transition-colors duration-200">
+                  <button className="flex items-center space-x-2 hover:bg-neutral-800/50 rounded-lg px-3 py-2 transition-colors duration-200">
                     <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white text-sm font-medium">
                       {getInitials(initialUser.email || "U")}
                     </div>
-                    <span className="hidden sm:block text-sm text-gray-300">
+                    <span className="hidden sm:block text-sm text-neutral-300">
                       {initialUser.email}
                     </span>
                     <svg
-                      className="w-4 h-4 text-gray-400"
+                      className="w-4 h-4 text-neutral-400"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -154,7 +181,7 @@ export default function Navigation({ initialUser }: NavigationProps) {
               ) : (
                 <Link
                   href="/signin"
-                  className="bg-white text-gray-900 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-300 transition-colors duration-200"
+                  className="bg-white text-neutral-950 px-4 py-2 rounded-lg text-sm font-medium hover:bg-neutral-300 transition-colors duration-200"
                 >
                   Sign In
                 </Link>
@@ -163,41 +190,41 @@ export default function Navigation({ initialUser }: NavigationProps) {
           </div>
 
           {/* Categories Bar */}
-          <div className="border-t border-gray-800">
+          <div className="border-t border-neutral-800">
             <div className="flex items-center space-x-8 py-3 overflow-x-auto">
               <Link
                 href="/"
-                className="text-sm text-gray-400 hover:text-white transition-colors duration-200 whitespace-nowrap"
+                className="text-sm text-neutral-400 hover:text-white transition-colors duration-200 whitespace-nowrap"
               >
                 All Prompts
               </Link>
               <Link
                 href="/?category=creative"
-                className="text-sm text-gray-400 hover:text-white transition-colors duration-200 whitespace-nowrap"
+                className="text-sm text-neutral-400 hover:text-white transition-colors duration-200 whitespace-nowrap"
               >
                 Creative
               </Link>
               <Link
                 href="/?category=coding"
-                className="text-sm text-gray-400 hover:text-white transition-colors duration-200 whitespace-nowrap"
+                className="text-sm text-neutral-400 hover:text-white transition-colors duration-200 whitespace-nowrap"
               >
                 Coding
               </Link>
               <Link
                 href="/?category=business"
-                className="text-sm text-gray-400 hover:text-white transition-colors duration-200 whitespace-nowrap"
+                className="text-sm text-neutral-400 hover:text-white transition-colors duration-200 whitespace-nowrap"
               >
                 Business
               </Link>
               <Link
                 href="/?category=education"
-                className="text-sm text-gray-400 hover:text-white transition-colors duration-200 whitespace-nowrap"
+                className="text-sm text-neutral-400 hover:text-white transition-colors duration-200 whitespace-nowrap"
               >
                 Education
               </Link>
               <Link
                 href="/?category=research"
-                className="text-sm text-gray-400 hover:text-white transition-colors duration-200 whitespace-nowrap"
+                className="text-sm text-neutral-400 hover:text-white transition-colors duration-200 whitespace-nowrap"
               >
                 Research
               </Link>
@@ -206,12 +233,12 @@ export default function Navigation({ initialUser }: NavigationProps) {
         </div>
 
         {/* Mobile Search */}
-        <div className="md:hidden border-t border-gray-800 bg-black/90">
+        <div className="md:hidden border-t border-neutral-800 bg-black/90">
           <div className="px-4 py-3">
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <svg
-                  className="h-5 w-5 text-gray-400"
+                  className="h-5 w-5 text-neutral-400"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -227,7 +254,7 @@ export default function Navigation({ initialUser }: NavigationProps) {
               <input
                 type="text"
                 placeholder="Search prompts..."
-                className="block w-full pl-10 pr-3 py-2 border border-gray-700 rounded-lg bg-gray-900/50 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-white transition-colors duration-200 text-sm"
+                className="block w-full pl-10 pr-3 py-2 border border-neutral-700 rounded-lg bg-neutral-950/50 text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-white transition-colors duration-200 text-sm"
               />
             </div>
           </div>
@@ -237,44 +264,21 @@ export default function Navigation({ initialUser }: NavigationProps) {
   }
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-sm border-b border-gray-800">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-sm border-b border-neutral-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo/Brand */}
           <div className="flex items-center">
             <Link
               href="/"
-              className="text-xl font-semibold text-white hover:text-gray-300 transition-colors duration-200"
+              className="text-xl font-semibold text-white hover:text-neutral-300 transition-colors duration-200"
             >
               Nihal's Prompts
             </Link>
           </div>
 
-          {/* Search Bar */}
-          <div className="flex-1 max-w-lg mx-8 hidden md:block">
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg
-                  className="h-5 w-5 text-gray-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
-              </div>
-              <input
-                type="text"
-                placeholder="Search prompts..."
-                className="block w-full pl-10 pr-3 py-2 border border-gray-700 rounded-lg bg-gray-900/50 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-white transition-colors duration-200 text-sm"
-              />
-            </div>
-          </div>
+          {/* Spacer */}
+          <div className="flex-1"></div>
 
           {/* User Menu */}
           <div className="flex items-center space-x-4">
@@ -283,16 +287,16 @@ export default function Navigation({ initialUser }: NavigationProps) {
                 {/* User Avatar - Clickable */}
                 <button
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className="flex items-center space-x-2 hover:bg-gray-800/50 rounded-lg px-3 py-2 transition-colors duration-200"
+                  className="flex items-center space-x-2 hover:bg-neutral-800/50 rounded-lg px-3 py-2 transition-colors duration-200"
                 >
                   <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white text-sm font-medium">
                     {getInitials(user.email || "U")}
                   </div>
-                  <span className="hidden sm:block text-sm text-gray-300">
+                  <span className="hidden sm:block text-sm text-neutral-300">
                     {user.email}
                   </span>
                   <svg
-                    className="w-4 h-4 text-gray-400"
+                    className="w-4 h-4 text-neutral-400"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -308,11 +312,11 @@ export default function Navigation({ initialUser }: NavigationProps) {
 
                 {/* Dropdown Menu */}
                 {isDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-gray-900 border border-gray-700 rounded-lg shadow-xl z-50">
+                  <div className="absolute right-0 mt-2 w-48 bg-neutral-950 border border-neutral-700 rounded-lg shadow-xl z-50">
                     <div className="py-2">
                       <Link
                         href="/admin"
-                        className="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors duration-200"
+                        className="flex items-center px-4 py-2 text-sm text-neutral-300 hover:bg-neutral-800 hover:text-white transition-colors duration-200"
                         onClick={() => setIsDropdownOpen(false)}
                       >
                         <svg
@@ -332,7 +336,7 @@ export default function Navigation({ initialUser }: NavigationProps) {
                       </Link>
                       <Link
                         href="/dashboard"
-                        className="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors duration-200"
+                        className="flex items-center px-4 py-2 text-sm text-neutral-300 hover:bg-neutral-800 hover:text-white transition-colors duration-200"
                         onClick={() => setIsDropdownOpen(false)}
                       >
                         <svg
@@ -350,14 +354,14 @@ export default function Navigation({ initialUser }: NavigationProps) {
                         </svg>
                         My Dashboard
                       </Link>
-                      <hr className="border-gray-700 my-2" />
+                      <hr className="border-neutral-700 my-2" />
                       <button
                         onClick={() => {
                           setIsDropdownOpen(false);
                           handleSignOut();
                         }}
                         disabled={isLoading}
-                        className="flex items-center w-full px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors duration-200 disabled:opacity-50"
+                        className="flex items-center w-full px-4 py-2 text-sm text-neutral-300 hover:bg-neutral-800 hover:text-white transition-colors duration-200 disabled:opacity-50"
                       >
                         <svg
                           className="w-4 h-4 mr-3"
@@ -381,7 +385,7 @@ export default function Navigation({ initialUser }: NavigationProps) {
             ) : (
               <Link
                 href="/signin"
-                className="bg-white text-gray-900 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-300 transition-colors duration-200"
+                className="bg-white text-neutral-950 px-4 py-2 rounded-lg text-sm font-medium hover:bg-neutral-300 transition-colors duration-200"
               >
                 Sign In
               </Link>
@@ -389,73 +393,53 @@ export default function Navigation({ initialUser }: NavigationProps) {
           </div>
         </div>
 
-        {/* Categories Bar */}
-        <div className="border-t border-gray-800">
+        {/* Categories Bar with Admin Items */}
+        <div className="border-t border-neutral-800">
           <div className="flex items-center space-x-8 py-3 overflow-x-auto">
             <Link
               href="/"
-              className="text-sm text-gray-400 hover:text-white transition-colors duration-200 whitespace-nowrap"
+              className="text-sm text-neutral-400 hover:text-white transition-colors duration-200 whitespace-nowrap"
             >
               All Prompts
             </Link>
-            <Link
-              href="/?category=creative"
-              className="text-sm text-gray-400 hover:text-white transition-colors duration-200 whitespace-nowrap"
-            >
-              Creative
-            </Link>
-            <Link
-              href="/?category=coding"
-              className="text-sm text-gray-400 hover:text-white transition-colors duration-200 whitespace-nowrap"
-            >
-              Coding
-            </Link>
-            <Link
-              href="/?category=business"
-              className="text-sm text-gray-400 hover:text-white transition-colors duration-200 whitespace-nowrap"
-            >
-              Business
-            </Link>
-            <Link
-              href="/?category=education"
-              className="text-sm text-gray-400 hover:text-white transition-colors duration-200 whitespace-nowrap"
-            >
-              Education
-            </Link>
-            <Link
-              href="/?category=research"
-              className="text-sm text-gray-400 hover:text-white transition-colors duration-200 whitespace-nowrap"
-            >
-              Research
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile Search */}
-      <div className="md:hidden border-t border-gray-800 bg-black/90">
-        <div className="px-4 py-3">
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <svg
-                className="h-5 w-5 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+            {categories.slice(0, 3).map((category) => (
+              <Link
+                key={category.id}
+                href={`/?category=${category.name}`}
+                className="text-sm text-neutral-400 hover:text-white transition-colors duration-200 whitespace-nowrap capitalize"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-            </div>
-            <input
-              type="text"
-              placeholder="Search prompts..."
-              className="block w-full pl-10 pr-3 py-2 border border-gray-700 rounded-lg bg-gray-900/50 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-white transition-colors duration-200 text-sm"
-            />
+                {category.name.replace(/-/g, " ")}
+              </Link>
+            ))}
+            {user && (
+              <>
+                <div className="w-px h-4 bg-neutral-600 mx-4"></div>
+                <Link
+                  href="/dashboard"
+                  className="text-sm text-neutral-400 hover:text-white transition-colors duration-200 whitespace-nowrap flex items-center gap-1"
+                >
+                  Dashboard
+                </Link>
+                <Link
+                  href="/admin/prompts"
+                  className="text-sm text-neutral-400 hover:text-white transition-colors duration-200 whitespace-nowrap flex items-center gap-1"
+                >
+                  Prompts
+                </Link>
+                <Link
+                  href="/admin/categories"
+                  className="text-sm text-neutral-400 hover:text-white transition-colors duration-200 whitespace-nowrap flex items-center gap-1"
+                >
+                  Categories
+                </Link>
+                <Link
+                  href="/admin/tags"
+                  className="text-sm text-neutral-400 hover:text-white transition-colors duration-200 whitespace-nowrap flex items-center gap-1"
+                >
+                  Tags
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>

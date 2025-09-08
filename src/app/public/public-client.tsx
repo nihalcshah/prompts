@@ -49,8 +49,9 @@ export default function PublicClient({ prompts }: PublicClientProps) {
         );
 
       const matchesCategory =
-        selectedCategory === "All" || 
-        (prompt.categories && prompt.categories.some(cat => cat.name === selectedCategory));
+        selectedCategory === "All" ||
+        (prompt.categories &&
+          prompt.categories.some((cat) => cat.name === selectedCategory));
 
       return matchesSearch && matchesCategory;
     });
@@ -59,17 +60,6 @@ export default function PublicClient({ prompts }: PublicClientProps) {
   return (
     <div className="min-h-screen bg-transparent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-6">
-            AI Prompts Collection
-          </h1>
-          <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
-            Discover, explore, and get inspired by carefully curated AI prompts
-            from our community
-          </p>
-        </div>
-
         {/* Search and Filter Bar */}
         <div className="mb-12">
           <div className="flex flex-col lg:flex-row gap-6 items-center justify-between">
@@ -79,10 +69,10 @@ export default function PublicClient({ prompts }: PublicClientProps) {
                 placeholder="Search prompts, categories, or tags..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-6 py-4 pl-12 rounded-2xl border border-gray-700/50 bg-gray-900/30 backdrop-blur-sm text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 text-lg"
+                className="w-full px-6 py-4 pl-12 rounded-2xl border border-neutral-700/50 bg-neutral-950/30 backdrop-blur-sm text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 text-lg"
               />
               <svg
-                className="absolute left-4 top-4.5 h-6 w-6 text-gray-400"
+                className="absolute left-4 top-4.5 h-6 w-6 text-neutral-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -104,7 +94,7 @@ export default function PublicClient({ prompts }: PublicClientProps) {
                   className={`px-6 py-3 rounded-xl text-sm font-medium border transition-all duration-300 hover:scale-105 ${
                     selectedCategory === category
                       ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white border-blue-500/50 shadow-lg shadow-blue-500/25"
-                      : "bg-gray-900/40 backdrop-blur-sm text-gray-300 border-gray-600/50 hover:bg-gray-800/60 hover:border-gray-500/50"
+                      : "bg-neutral-950/40 backdrop-blur-sm text-neutral-300 border-neutral-600/50 hover:bg-neutral-800/60 hover:border-neutral-500/50"
                   }`}
                 >
                   {category}
@@ -116,7 +106,7 @@ export default function PublicClient({ prompts }: PublicClientProps) {
 
         {/* Results Count */}
         <div className="mb-6">
-          <p className="text-gray-400 text-sm">
+          <p className="text-neutral-400 text-sm">
             {filteredPrompts.length} prompt
             {filteredPrompts.length !== 1 ? "s" : ""} found
             {searchTerm && ` for "${searchTerm}"`}
@@ -127,9 +117,9 @@ export default function PublicClient({ prompts }: PublicClientProps) {
         {/* Prompts Grid */}
         {filteredPrompts.length === 0 ? (
           <div className="text-center py-12">
-            <div className="mx-auto w-24 h-24 bg-gray-800 rounded-full flex items-center justify-center mb-4">
+            <div className="mx-auto w-24 h-24 bg-neutral-800 rounded-full flex items-center justify-center mb-4">
               <svg
-                className="w-12 h-12 text-gray-400"
+                className="w-12 h-12 text-neutral-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -142,10 +132,10 @@ export default function PublicClient({ prompts }: PublicClientProps) {
                 />
               </svg>
             </div>
-            <h3 className="text-lg font-medium text-gray-300 mb-2">
+            <h3 className="text-lg font-medium text-neutral-300 mb-2">
               No prompts found
             </h3>
-            <p className="text-gray-400 mb-4">
+            <p className="text-neutral-400 mb-4">
               {searchTerm || selectedCategory !== "All"
                 ? "Try adjusting your search or filter criteria"
                 : "No public prompts available yet"}
@@ -167,7 +157,7 @@ export default function PublicClient({ prompts }: PublicClientProps) {
             {filteredPrompts.map((prompt) => (
               <div
                 key={prompt.id}
-                className="bg-gradient-to-br from-gray-900/80 to-gray-800/60 backdrop-blur-xl rounded-2xl border border-gray-700/30 p-8 hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-500 hover:scale-[1.02] hover:border-blue-500/30 group relative overflow-hidden"
+                className="bg-gradient-to-br from-neutral-950/80 to-neutral-800/60 backdrop-blur-xl rounded-2xl border border-neutral-700/30 p-8 hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-500 hover:scale-[1.02] hover:border-blue-500/30 group relative overflow-hidden flex flex-col h-full"
               >
                 {/* Gradient overlay */}
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl" />
@@ -179,7 +169,10 @@ export default function PublicClient({ prompts }: PublicClientProps) {
                   {prompt.categories && prompt.categories.length > 0 && (
                     <div className="flex flex-wrap gap-2">
                       {prompt.categories.map((category) => (
-                        <span key={category.id} className="inline-block px-3 py-1.5 text-xs font-semibold bg-gradient-to-r from-purple-600/20 to-blue-600/20 text-purple-300 rounded-full border border-purple-500/30 backdrop-blur-sm">
+                        <span
+                          key={category.id}
+                          className="inline-block px-3 py-1.5 text-xs font-semibold bg-gradient-to-r from-purple-600/20 to-blue-600/20 text-purple-300 rounded-full border border-purple-500/30 backdrop-blur-sm"
+                        >
                           {category.name}
                         </span>
                       ))}
@@ -189,14 +182,14 @@ export default function PublicClient({ prompts }: PublicClientProps) {
 
                 {/* Description */}
                 {prompt.description && (
-                  <p className="text-gray-300 mb-6 line-clamp-2 relative z-10 leading-relaxed">
+                  <p className="text-neutral-300 mb-6 line-clamp-2 relative z-10 leading-relaxed">
                     {prompt.description}
                   </p>
                 )}
 
                 {/* Content Preview */}
-                <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 mb-6 border border-gray-700/30 relative z-10">
-                  <p className="text-sm text-gray-200 line-clamp-3 font-mono leading-relaxed">
+                <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 mb-6 border border-neutral-700/30 relative z-10">
+                  <p className="text-sm text-neutral-200 line-clamp-3 font-mono leading-relaxed">
                     {prompt.content}
                   </p>
                 </div>
@@ -213,7 +206,7 @@ export default function PublicClient({ prompts }: PublicClientProps) {
                       </span>
                     ))}
                     {prompt.tags.length > 3 && (
-                      <span className="px-3 py-1.5 text-xs font-medium bg-gray-700/30 text-gray-400 rounded-full border border-gray-600/30 backdrop-blur-sm">
+                      <span className="px-3 py-1.5 text-xs font-medium bg-neutral-700/30 text-neutral-400 rounded-full border border-neutral-600/30 backdrop-blur-sm">
                         +{prompt.tags.length - 3} more
                       </span>
                     )}
@@ -221,12 +214,13 @@ export default function PublicClient({ prompts }: PublicClientProps) {
                 )}
 
                 {/* Footer */}
-                <div className="flex items-center justify-between pt-6 border-t border-gray-700/30 relative z-10">
-                  <div className="text-sm text-gray-400 font-medium">
-                    by{" "}
-                    {prompt.author_name ||
-                      prompt.author?.split("@")[0] ||
-                      "Anonymous"}
+                <div className="flex items-center justify-between mt-auto pt-6 border-t border-neutral-700/30 relative z-10">
+                  <div className="text-sm text-neutral-400 font-medium">
+                    {new Date(prompt.created_at).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })}
                   </div>
                   <Link
                     href={`/prompt/${prompt.id}`}

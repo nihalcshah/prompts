@@ -75,7 +75,7 @@ export default function CreateTagForm() {
   };
 
   return (
-    <div className="bg-gray-900/50 backdrop-blur-lg rounded-xl border border-gray-700/50 p-6">
+    <div className="bg-neutral-950/50 backdrop-blur-lg rounded-xl border border-neutral-700/50 p-6">
       <form onSubmit={handleSubmit} className="space-y-6">
         {error && (
           <div className="bg-red-900/50 border border-red-500/50 rounded-lg p-4">
@@ -123,15 +123,17 @@ export default function CreateTagForm() {
 
         {/* Preview */}
         {formData.name && (
-          <div className="border border-gray-700 rounded-lg p-4 bg-gray-800/30">
-            <h3 className="text-sm font-medium text-gray-300 mb-2">Preview</h3>
+          <div className="border border-neutral-700 rounded-lg p-4 bg-neutral-800/30">
+            <h3 className="text-sm font-medium text-neutral-300 mb-2">
+              Preview
+            </h3>
             <div className="flex items-center gap-2">
               <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-900/30 text-green-300 border border-green-500/30">
                 {formData.name}
               </span>
             </div>
             {formData.description && (
-              <p className="text-gray-400 text-sm mt-2">
+              <p className="text-neutral-400 text-sm mt-2">
                 {formData.description}
               </p>
             )}
@@ -139,10 +141,10 @@ export default function CreateTagForm() {
         )}
 
         {/* Actions */}
-        <div className="flex items-center justify-between pt-6 border-t border-gray-700">
+        <div className="flex items-center justify-between pt-6 border-t border-neutral-700">
           <Link
             href="/admin/tags"
-            className="text-gray-400 hover:text-white transition-colors duration-200"
+            className="text-neutral-400 hover:text-white transition-colors duration-200"
           >
             Cancel
           </Link>

@@ -1,40 +1,46 @@
-import { createClient } from '@/utils/supabase/server'
-import { redirect } from 'next/navigation'
-import { getCurrentProfile, upsertProfile } from '@/app/actions/profile'
-import DashboardClient from './dashboard-client'
+import { createClient } from "@/utils/supabase/server";
+import { redirect } from "next/navigation";
+import { getCurrentProfile, upsertProfile } from "@/app/actions/profile";
+import DashboardClient from "./dashboard-client";
 
 export default async function DashboardPage() {
-  const supabase = await createClient()
-  
+  const supabase = await createClient();
+
   // Get the authenticated user
-  const { data: { user }, error } = await supabase.auth.getUser()
-  
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
   if (error || !user) {
-    redirect('/signin')
+    redirect("/signin");
   }
 
   // Ensure user profile exists (upsert on first login)
-  const profileResult = await upsertProfile()
-  
+  const profileResult = await upsertProfile();
+
   if (!profileResult.success) {
-    console.error('Failed to upsert profile:', profileResult.error)
+    console.error("Failed to upsert profile:", profileResult.error);
   }
 
   // Get the current profile
-  const currentProfileResult = await getCurrentProfile()
-  const profile = currentProfileResult.success ? currentProfileResult.profile : null
+  const currentProfileResult = await getCurrentProfile();
+  const profile = currentProfileResult.success
+    ? currentProfileResult.profile
+    : null;
 
   return (
     <div className="min-h-screen bg-transparent">
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="px-4 py-6 sm:px-0">
-          <div className="border-b border-gray-700 pb-5">
+          <div className="border-b border-neutral-700 pb-5">
             <h1 className="text-3xl font-bold leading-6 text-white">
               Dashboard
             </h1>
-            <p className="mt-2 max-w-4xl text-sm text-gray-300">
-              Welcome to your dashboard. Manage your profile and account settings.
+            <p className="mt-2 max-w-4xl text-sm text-neutral-300">
+              Welcome to your dashboard. Manage your profile and account
+              settings.
             </p>
           </div>
         </div>
@@ -43,9 +49,10 @@ export default async function DashboardPage() {
         <div className="px-4 py-6 sm:px-0">
           <div className="mb-8">
             <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-              Welcome back, {profile?.display_name || user.email?.split('@')[0] || 'User'}!
+              Welcome back,{" "}
+              {profile?.display_name || user.email?.split("@")[0] || "User"}!
             </h1>
-            <p className="mt-2 text-gray-300">
+            <p className="mt-2 text-neutral-300">
               Manage your prompts and explore the community.
             </p>
           </div>
@@ -59,9 +66,9 @@ export default async function DashboardPage() {
 
             {/* Quick Actions */}
             <div className="lg:col-span-2">
-              <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg overflow-hidden shadow-xl rounded-2xl border border-gray-200/50 dark:border-gray-700/50">
+              <div className="bg-white/80 dark:bg-neutral-800/80 backdrop-blur-lg overflow-hidden shadow-xl rounded-2xl border border-neutral-200/50 dark:border-neutral-700/50">
                 <div className="px-6 py-8">
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-6">
+                  <h3 className="text-xl font-bold text-neutral-950 dark:text-neutral-100 mb-6">
                     Quick Actions
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -71,15 +78,25 @@ export default async function DashboardPage() {
                     >
                       <div className="flex items-center mb-3">
                         <div className="p-2 bg-blue-500 rounded-lg">
-                          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                          <svg
+                            className="w-6 h-6 text-white"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                            />
                           </svg>
                         </div>
-                        <h4 className="ml-3 text-lg font-semibold text-gray-900 dark:text-gray-100">
+                        <h4 className="ml-3 text-lg font-semibold text-neutral-950 dark:text-neutral-100">
                           Explore Prompts
                         </h4>
                       </div>
-                      <p className="text-gray-600 dark:text-gray-400">
+                      <p className="text-neutral-600 dark:text-neutral-400">
                         Discover amazing prompts from the community
                       </p>
                     </a>
@@ -90,15 +107,25 @@ export default async function DashboardPage() {
                     >
                       <div className="flex items-center mb-3">
                         <div className="p-2 bg-green-500 rounded-lg">
-                          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                          <svg
+                            className="w-6 h-6 text-white"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M12 4v16m8-8H4"
+                            />
                           </svg>
                         </div>
-                        <h4 className="ml-3 text-lg font-semibold text-gray-900 dark:text-gray-100">
+                        <h4 className="ml-3 text-lg font-semibold text-neutral-950 dark:text-neutral-100">
                           Create Prompt
                         </h4>
                       </div>
-                      <p className="text-gray-600 dark:text-gray-400">
+                      <p className="text-neutral-600 dark:text-neutral-400">
                         Share your creative prompts with others
                       </p>
                     </a>
@@ -110,5 +137,5 @@ export default async function DashboardPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

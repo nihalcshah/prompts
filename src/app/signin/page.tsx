@@ -153,12 +153,12 @@ export default function SignInPage() {
           <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
             {isSignUp ? "Create your account" : "Welcome back"}
           </h2>
-          <p className="mt-2 text-gray-300">
+          <p className="mt-2 text-neutral-300">
             {isSignUp
               ? "Join our community of prompt creators"
               : "Sign in to manage your prompts"}
           </p>
-          <p className="mt-4 text-sm text-gray-300">
+          <p className="mt-4 text-sm text-neutral-300">
             {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
             <button
               type="button"
@@ -176,7 +176,7 @@ export default function SignInPage() {
           </p>
         </div>
 
-        <div className="bg-gray-900/80 backdrop-blur-lg p-8 rounded-2xl shadow-2xl border border-gray-700/50">
+        <div className="bg-neutral-950/80 backdrop-blur-lg p-8 rounded-2xl shadow-2xl border border-neutral-700/50">
           <form
             className="space-y-6"
             onSubmit={isSignUp ? handleSignUp : handleSignIn}
@@ -184,7 +184,7 @@ export default function SignInPage() {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-300"
+                className="block text-sm font-medium text-neutral-300"
               >
                 Email address
               </label>
@@ -196,7 +196,7 @@ export default function SignInPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 block w-full px-4 py-3 border border-gray-700 rounded-lg shadow-sm placeholder-gray-400 bg-gray-800/50 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                className="mt-1 block w-full px-4 py-3 border border-neutral-700 rounded-lg shadow-sm placeholder-neutral-400 bg-neutral-800/50 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                 placeholder="Enter your email"
               />
             </div>
@@ -204,7 +204,7 @@ export default function SignInPage() {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-gray-300"
+                className="block text-sm font-medium text-neutral-300"
               >
                 Password
               </label>
@@ -216,7 +216,7 @@ export default function SignInPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="mt-1 block w-full px-4 py-3 border border-gray-700 rounded-lg shadow-sm placeholder-gray-400 bg-gray-800/50 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                className="mt-1 block w-full px-4 py-3 border border-neutral-700 rounded-lg shadow-sm placeholder-neutral-400 bg-neutral-800/50 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                 placeholder="Enter your password"
               />
             </div>
@@ -225,7 +225,7 @@ export default function SignInPage() {
               <div>
                 <label
                   htmlFor="confirmPassword"
-                  className="block text-sm font-medium text-gray-300"
+                  className="block text-sm font-medium text-neutral-300"
                 >
                   Confirm Password
                 </label>
@@ -237,7 +237,7 @@ export default function SignInPage() {
                   required
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="mt-1 block w-full px-4 py-3 border border-gray-700 rounded-lg shadow-sm placeholder-gray-400 bg-gray-800/50 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                  className="mt-1 block w-full px-4 py-3 border border-neutral-700 rounded-lg shadow-sm placeholder-neutral-400 bg-neutral-800/50 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                   placeholder="Confirm your password"
                 />
               </div>
@@ -276,10 +276,10 @@ export default function SignInPage() {
 
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-600" />
+                <div className="w-full border-t border-neutral-600" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-gray-900 text-gray-400">
+                <span className="px-2 bg-neutral-950 text-neutral-400">
                   Or continue with
                 </span>
               </div>
@@ -290,7 +290,7 @@ export default function SignInPage() {
                 type="button"
                 onClick={handleGoogleSignIn}
                 disabled={isLoading}
-                className="w-full flex justify-center items-center py-3 px-4 border border-gray-600 rounded-lg shadow-sm text-sm font-medium text-gray-300 bg-gray-800/50 hover:bg-gray-700/50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:scale-105"
+                className="w-full flex justify-center items-center py-3 px-4 border border-neutral-600 rounded-lg shadow-sm text-sm font-medium text-neutral-300 bg-neutral-800/50 hover:bg-neutral-700/50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:scale-105"
               >
                 <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
                   <path

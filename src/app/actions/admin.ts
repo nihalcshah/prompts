@@ -311,6 +311,27 @@ export async function deletePrompt(id: string): Promise<ActionResult> {
   try {
     const { supabase } = await verifyAdminAccess()
     
+    // First delete related records in prompt_categories
+    const { error: categoriesError } = await supabase
+      .from('prompt_categories')
+      .delete()
+      .eq('prompt_id', id)
+    
+    if (categoriesError) {
+      return { success: false, error: `Failed to delete category relationships: ${categoriesError.message}` }
+    }
+    
+    // Then delete related records in prompt_tags
+    const { error: tagsError } = await supabase
+      .from('prompt_tags')
+      .delete()
+      .eq('prompt_id', id)
+    
+    if (tagsError) {
+      return { success: false, error: `Failed to delete tag relationships: ${tagsError.message}` }
+    }
+    
+    // Finally delete the prompt itself
     const { error } = await supabase
       .from('prompts')
       .delete()
@@ -797,6 +818,27 @@ export async function bulkDeletePrompts(ids: string[]): Promise<ActionResult> {
   try {
     const { supabase } = await verifyAdminAccess()
     
+    // First delete related records in prompt_categories
+    const { error: categoriesError } = await supabase
+      .from('prompt_categories')
+      .delete()
+      .in('prompt_id', ids)
+    
+    if (categoriesError) {
+      return { success: false, error: `Failed to delete category relationships: ${categoriesError.message}` }
+    }
+    
+    // Then delete related records in prompt_tags
+    const { error: tagsError } = await supabase
+      .from('prompt_tags')
+      .delete()
+      .in('prompt_id', ids)
+    
+    if (tagsError) {
+      return { success: false, error: `Failed to delete tag relationships: ${tagsError.message}` }
+    }
+    
+    // Finally delete the prompts themselves
     const { error } = await supabase
       .from('prompts')
       .delete()

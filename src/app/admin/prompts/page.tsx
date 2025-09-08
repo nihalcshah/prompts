@@ -1,52 +1,54 @@
-import { getPrompts, getCategories, getTags } from '@/app/actions/admin'
-import PromptsClient from './prompts-client'
-import Link from 'next/link'
+import { getPrompts, getCategories, getTags } from "@/app/actions/admin";
+import PromptsClient from "./prompts-client";
+import Link from "next/link";
 
 interface SearchParams {
-  search?: string
-  category?: string
-  tag?: string
-  filter?: 'public' | 'private'
+  search?: string;
+  category?: string;
+  tag?: string;
+  filter?: "public" | "private";
 }
 
 interface PageProps {
-  searchParams: Promise<SearchParams>
+  searchParams: Promise<SearchParams>;
 }
 
 export default async function PromptsPage({ searchParams }: PageProps) {
-  const params = await searchParams
-  
+  const params = await searchParams;
+
   // Build filters
-  const filters: any = {}
-  if (params.search) filters.search = params.search
-  if (params.category) filters.category = params.category
-  if (params.tag) filters.tag = params.tag
-  if (params.filter === 'public') filters.isPublic = true
-  if (params.filter === 'private') filters.isPublic = false
-  
+  const filters: any = {};
+  if (params.search) filters.search = params.search;
+  if (params.category) filters.category = params.category;
+  if (params.tag) filters.tag = params.tag;
+  if (params.filter === "public") filters.isPublic = true;
+  if (params.filter === "private") filters.isPublic = false;
+
   // Fetch data
   const [promptsResult, categoriesResult, tagsResult] = await Promise.all([
     getPrompts(filters),
     getCategories(),
-    getTags()
-  ])
-  
+    getTags(),
+  ]);
+
   if (!promptsResult.success) {
     return (
       <div className="min-h-screen bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="bg-red-900 border border-red-700 rounded-lg p-4">
-            <p className="text-red-200">Error loading prompts: {promptsResult.error}</p>
+            <p className="text-red-200">
+              Error loading prompts: {promptsResult.error}
+            </p>
           </div>
         </div>
       </div>
-    )
+    );
   }
-  
-  const prompts = promptsResult.data || []
-  const categories = categoriesResult.success ? categoriesResult.data : []
-  const tags = tagsResult.success ? tagsResult.data : []
-  
+
+  const prompts = promptsResult.data || [];
+  const categories = categoriesResult.success ? categoriesResult.data : [];
+  const tags = tagsResult.success ? tagsResult.data : [];
+
   return (
     <div className="min-h-screen bg-black">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -56,7 +58,7 @@ export default async function PromptsPage({ searchParams }: PageProps) {
             <h1 className="text-3xl font-bold text-white mb-2">
               Prompts Management
             </h1>
-            <p className="text-gray-400">
+            <p className="text-neutral-400">
               Create, edit, and manage your prompts collection.
             </p>
           </div>
@@ -70,34 +72,34 @@ export default async function PromptsPage({ searchParams }: PageProps) {
             </Link>
           </div>
         </div>
-        
+
         {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-          <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
+          <div className="bg-neutral-950 border border-neutral-800 rounded-lg p-4">
             <div className="flex items-center">
               <span className="text-2xl mr-3">💬</span>
               <div>
-                <p className="text-sm text-gray-400">Total Prompts</p>
+                <p className="text-sm text-neutral-400">Total Prompts</p>
                 <p className="text-xl font-bold text-white">{prompts.length}</p>
               </div>
             </div>
           </div>
-          <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
+          <div className="bg-neutral-950 border border-neutral-800 rounded-lg p-4">
             <div className="flex items-center">
               <span className="text-2xl mr-3">🌐</span>
               <div>
-                <p className="text-sm text-gray-400">Public</p>
+                <p className="text-sm text-neutral-400">Public</p>
                 <p className="text-xl font-bold text-white">
                   {prompts.filter((p: any) => p.is_public).length}
                 </p>
               </div>
             </div>
           </div>
-          <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
+          <div className="bg-neutral-950 border border-neutral-800 rounded-lg p-4">
             <div className="flex items-center">
               <span className="text-2xl mr-3">🔒</span>
               <div>
-                <p className="text-sm text-gray-400">Private</p>
+                <p className="text-sm text-neutral-400">Private</p>
                 <p className="text-xl font-bold text-white">
                   {prompts.filter((p: any) => !p.is_public).length}
                 </p>
@@ -105,9 +107,9 @@ export default async function PromptsPage({ searchParams }: PageProps) {
             </div>
           </div>
         </div>
-        
+
         {/* Client Component for Interactive Features */}
-        <PromptsClient 
+        <PromptsClient
           initialPrompts={prompts}
           categories={categories}
           tags={tags}
@@ -115,5 +117,5 @@ export default async function PromptsPage({ searchParams }: PageProps) {
         />
       </div>
     </div>
-  )
+  );
 }

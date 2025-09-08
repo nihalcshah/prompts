@@ -4,14 +4,14 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 interface Category {
-  id: string
-  name: string
-  description?: string
-  created_at: string
+  id: string;
+  name: string;
+  description?: string;
+  created_at: string;
 }
 
 interface CategoriesClientProps {
-  categories: Category[]
+  categories: Category[];
 }
 
 export default function CategoriesClient({
@@ -39,7 +39,7 @@ export default function CategoriesClient({
     if (selectedCategories.length === filteredCategories.length) {
       setSelectedCategories([]);
     } else {
-      setSelectedCategories(filteredCategories.map(cat => cat.name));
+      setSelectedCategories(filteredCategories.map((cat) => cat.name));
     }
   };
 
@@ -85,10 +85,10 @@ export default function CategoriesClient({
             placeholder="Search categories..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full px-4 py-2 pl-10 rounded-lg border border-gray-700 bg-gray-900/50 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+            className="w-full px-4 py-2 pl-10 rounded-lg border border-neutral-700 bg-neutral-950/50 text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
           />
           <svg
-            className="absolute left-3 top-2.5 h-5 w-5 text-gray-400"
+            className="absolute left-3 top-2.5 h-5 w-5 text-neutral-400"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -131,9 +131,9 @@ export default function CategoriesClient({
       {/* Categories Grid */}
       {filteredCategories.length === 0 ? (
         <div className="text-center py-12">
-          <div className="mx-auto w-24 h-24 bg-gray-800 rounded-full flex items-center justify-center mb-4">
+          <div className="mx-auto w-24 h-24 bg-neutral-800 rounded-full flex items-center justify-center mb-4">
             <svg
-              className="w-12 h-12 text-gray-600"
+              className="w-12 h-12 text-neutral-600"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -149,7 +149,7 @@ export default function CategoriesClient({
           <h3 className="text-lg font-medium text-white mb-2">
             {searchTerm ? "No categories found" : "No categories yet"}
           </h3>
-          <p className="text-gray-400 mb-6">
+          <p className="text-neutral-400 mb-6">
             {searchTerm
               ? `No categories match "${searchTerm}"`
               : "Create your first category to organize your prompts"}
@@ -166,7 +166,7 @@ export default function CategoriesClient({
       ) : (
         <div className="space-y-4">
           {/* Select All */}
-          <div className="flex items-center gap-3 p-4 bg-gray-900/30 rounded-lg border border-gray-700/50">
+          <div className="flex items-center gap-3 p-4 bg-neutral-950/30 rounded-lg border border-neutral-700/50">
             <input
               type="checkbox"
               checked={
@@ -174,9 +174,9 @@ export default function CategoriesClient({
                 filteredCategories.length > 0
               }
               onChange={handleSelectAll}
-              className="w-4 h-4 text-blue-600 bg-gray-700 border-gray-600 rounded focus:ring-blue-500 focus:ring-2"
+              className="w-4 h-4 text-blue-600 bg-neutral-700 border-neutral-600 rounded focus:ring-blue-500 focus:ring-2"
             />
-            <span className="text-sm text-gray-300">
+            <span className="text-sm text-neutral-300">
               {selectedCategories.length === filteredCategories.length &&
               filteredCategories.length > 0
                 ? "Deselect all"
@@ -192,7 +192,7 @@ export default function CategoriesClient({
                 className={`p-4 rounded-lg border transition-all duration-200 cursor-pointer ${
                   selectedCategories.includes(category.name)
                     ? "bg-blue-900/30 border-blue-500/50 ring-1 ring-blue-500/30"
-                    : "bg-gray-900/50 border-gray-700/50 hover:border-gray-600"
+                    : "bg-neutral-950/50 border-neutral-700/50 hover:border-neutral-600"
                 }`}
                 onClick={() => handleSelectCategory(category.name)}
               >
@@ -202,12 +202,16 @@ export default function CategoriesClient({
                       type="checkbox"
                       checked={selectedCategories.includes(category.name)}
                       onChange={() => handleSelectCategory(category.name)}
-                      className="w-4 h-4 text-blue-600 bg-gray-700 border-gray-600 rounded focus:ring-blue-500 focus:ring-2"
+                      className="w-4 h-4 text-blue-600 bg-neutral-700 border-neutral-600 rounded focus:ring-blue-500 focus:ring-2"
                       onClick={(e) => e.stopPropagation()}
                     />
                     <div>
-                      <h3 className="font-medium text-white">{category.name}</h3>
-                      <p className="text-sm text-gray-400">{category.description || "Category"}</p>
+                      <h3 className="font-medium text-white">
+                        {category.name}
+                      </h3>
+                      <p className="text-sm text-neutral-400">
+                        {category.description || "Category"}
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
@@ -220,7 +224,7 @@ export default function CategoriesClient({
                           )}/edit`
                         );
                       }}
-                      className="p-2 text-gray-400 hover:text-blue-400 transition-colors duration-200"
+                      className="p-2 text-neutral-400 hover:text-blue-400 transition-colors duration-200"
                       title="Edit category"
                     >
                       <svg

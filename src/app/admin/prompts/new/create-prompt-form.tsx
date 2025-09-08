@@ -154,7 +154,7 @@ export default function CreatePromptForm({
   };
 
   return (
-    <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
+    <div className="bg-neutral-950 border border-neutral-800 rounded-lg p-6">
       <form onSubmit={handleSubmit} className="space-y-6">
         <FormError error={error} />
 
@@ -213,7 +213,7 @@ export default function CreatePromptForm({
         <div>
           <label
             htmlFor="tags"
-            className="block text-sm font-medium text-gray-300 mb-2"
+            className="block text-sm font-medium text-neutral-300 mb-2"
           >
             Tags
           </label>
@@ -224,8 +224,8 @@ export default function CreatePromptForm({
                 value={newTag}
                 onChange={(e) => setNewTag(e.target.value)}
                 onKeyPress={handleTagKeyPress}
-                className={`flex-1 px-3 py-2 bg-gray-800 border rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                  fieldErrors.tags ? "border-red-500" : "border-gray-700"
+                className={`flex-1 px-3 py-2 bg-neutral-800 border rounded-md text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                  fieldErrors.tags ? "border-red-500" : "border-neutral-700"
                 }`}
                 placeholder="Add a tag (e.g., productivity, ai, writing)"
               />
@@ -241,7 +241,7 @@ export default function CreatePromptForm({
             {fieldErrors.tags && (
               <p className="text-red-400 text-sm">{fieldErrors.tags}</p>
             )}
-            <p className="text-gray-400 text-sm">
+            <p className="text-neutral-400 text-sm">
               Tags help users find your prompt. Use lowercase letters, numbers,
               and hyphens only.
             </p>
@@ -249,7 +249,7 @@ export default function CreatePromptForm({
             {/* Existing Tags */}
             {tags.length > 0 && (
               <div>
-                <p className="text-sm text-gray-400 mb-2">Existing tags:</p>
+                <p className="text-sm text-neutral-400 mb-2">Existing tags:</p>
                 <div className="flex flex-wrap gap-2">
                   {tags.map((tag) => (
                     <button
@@ -266,7 +266,7 @@ export default function CreatePromptForm({
                       className={`px-2 py-1 text-xs rounded transition-colors duration-200 ${
                         formData.tags.includes(tag.name)
                           ? "bg-blue-600 text-white cursor-not-allowed"
-                          : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                          : "bg-neutral-700 text-neutral-300 hover:bg-neutral-600"
                       }`}
                       disabled={formData.tags.includes(tag.name)}
                     >
@@ -280,7 +280,7 @@ export default function CreatePromptForm({
             {/* Selected Tags */}
             {formData.tags.length > 0 && (
               <div>
-                <p className="text-sm text-gray-400 mb-2">Selected tags:</p>
+                <p className="text-sm text-neutral-400 mb-2">Selected tags:</p>
                 <div className="flex flex-wrap gap-2">
                   {formData.tags.map((tag) => (
                     <span
@@ -307,7 +307,7 @@ export default function CreatePromptForm({
         <div>
           <label
             htmlFor="notes"
-            className="block text-sm font-medium text-gray-300 mb-2"
+            className="block text-sm font-medium text-neutral-300 mb-2"
           >
             Notes
           </label>
@@ -318,7 +318,7 @@ export default function CreatePromptForm({
               setFormData((prev) => ({ ...prev, notes: e.target.value }))
             }
             rows={4}
-            className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-md text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             placeholder="Additional notes or context for this prompt"
           />
         </div>
@@ -336,7 +336,7 @@ export default function CreatePromptForm({
         <div className="flex flex-col sm:flex-row sm:justify-end sm:space-x-4 space-y-3 sm:space-y-0">
           <Link
             href="/admin/prompts"
-            className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-md transition-colors duration-200 text-center"
+            className="px-4 py-2 bg-neutral-700 hover:bg-neutral-600 text-white rounded-md transition-colors duration-200 text-center"
           >
             Cancel
           </Link>

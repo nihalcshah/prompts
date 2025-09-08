@@ -32,13 +32,13 @@ body {
 .bg-pattern {
   background-image: radial-gradient(
       circle at 25% 25%,
-      rgba(255, 255, 255, 0.02) 0%,
-      transparent 50%
+      rgba(255, 255, 255, 0.03) 0%,
+      transparent 20%
     ),
     radial-gradient(
       circle at 75% 75%,
       rgba(255, 255, 255, 0.02) 0%,
-      transparent 50%
+      transparent 20%
     );
   background-size: 100px 100px;
   background-position: 0 0, 50px 50px;
