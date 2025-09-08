@@ -42,7 +42,7 @@ export async function signUpWithValidation(
       options: {
         emailRedirectTo: `${
           process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
-        }/dashboard`,
+        }/admin`,
       },
     });
 

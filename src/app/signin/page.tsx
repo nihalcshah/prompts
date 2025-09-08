@@ -56,7 +56,7 @@ export default function SignInPage() {
       }
 
       if (data.user) {
-        router.push("/dashboard");
+        router.push("/admin");
         router.refresh();
       }
     } catch (err) {
@@ -101,7 +101,7 @@ export default function SignInPage() {
           // User is immediately confirmed
           setMessage(result.message);
           setTimeout(() => {
-            router.push("/dashboard");
+            router.push("/admin");
             router.refresh();
           }, 1000);
         } else {
@@ -129,7 +129,7 @@ export default function SignInPage() {
             typeof window !== "undefined"
               ? window.location.origin
               : process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
-          }/dashboard`,
+          }/admin`,
         },
       });
 

@@ -9,6 +9,7 @@ import {
   bulkUpdatePrompts,
   type Prompt,
 } from "@/app/actions/admin";
+import { GiPencilBrush } from "react-icons/gi";
 
 interface Tag {
   id: string;
@@ -318,7 +319,7 @@ export default function PromptsClient({
                 <tr>
                   <td colSpan={7} className="px-6 py-12 text-center">
                     <div className="text-neutral-400">
-                      <span className="text-4xl mb-4 block">📝</span>
+                      <GiPencilBrush className="text-4xl mb-4 block mx-auto" />
                       <p className="text-lg font-medium mb-2">
                         No prompts found
                       </p>
@@ -352,9 +353,9 @@ export default function PromptsClient({
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      {prompt.category && prompt.category.length > 0 ? (
+                      {prompt.categories && prompt.categories.length > 0 ? (
                         <div className="flex flex-wrap gap-1">
-                          {prompt.category.map((category) => (
+                          {prompt.categories.map((category) => (
                             <span
                               key={category.id}
                               className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-900 text-blue-200"
@@ -400,7 +401,7 @@ export default function PromptsClient({
                             : "bg-yellow-900 text-yellow-200"
                         }`}
                       >
-                        {prompt.is_public ? "🌐 Public" : "🔒 Private"}
+                        {prompt.is_public ? "Public" : "Private"}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-sm text-neutral-400">

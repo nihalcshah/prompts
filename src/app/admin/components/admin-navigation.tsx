@@ -83,7 +83,7 @@ export default function AdminNavigation({ user }: AdminNavigationProps) {
               <div className="flex items-center space-x-4">
                 <span className="text-sm text-neutral-300">{user.email}</span>
                 <Link
-                  href="/dashboard"
+                  href="/admin"
                   className="text-neutral-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
                 >
                   Dashboard
@@ -163,7 +163,7 @@ export default function AdminNavigation({ user }: AdminNavigationProps) {
                 {user.email}
               </div>
               <Link
-                href="/dashboard"
+                href="/admin"
                 className="block px-3 py-2 rounded-md text-base font-medium text-neutral-300 hover:text-white hover:bg-neutral-700 transition-colors duration-200"
                 onClick={() => setIsMobileMenuOpen(false)}
               >

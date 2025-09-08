@@ -67,7 +67,7 @@ export default async function PromptsPage({ searchParams }: PageProps) {
               href="/admin/prompts/new"
               className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200"
             >
-              <span className="mr-2">➕</span>
+              <span className="mr-2">+</span>
               Create New Prompt
             </Link>
           </div>
@@ -77,7 +77,6 @@ export default async function PromptsPage({ searchParams }: PageProps) {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
           <div className="bg-neutral-950 border border-neutral-800 rounded-lg p-4">
             <div className="flex items-center">
-              <span className="text-2xl mr-3">💬</span>
               <div>
                 <p className="text-sm text-neutral-400">Total Prompts</p>
                 <p className="text-xl font-bold text-white">{prompts.length}</p>
@@ -86,7 +85,6 @@ export default async function PromptsPage({ searchParams }: PageProps) {
           </div>
           <div className="bg-neutral-950 border border-neutral-800 rounded-lg p-4">
             <div className="flex items-center">
-              <span className="text-2xl mr-3">🌐</span>
               <div>
                 <p className="text-sm text-neutral-400">Public</p>
                 <p className="text-xl font-bold text-white">
@@ -97,7 +95,6 @@ export default async function PromptsPage({ searchParams }: PageProps) {
           </div>
           <div className="bg-neutral-950 border border-neutral-800 rounded-lg p-4">
             <div className="flex items-center">
-              <span className="text-2xl mr-3">🔒</span>
               <div>
                 <p className="text-sm text-neutral-400">Private</p>
                 <p className="text-xl font-bold text-white">

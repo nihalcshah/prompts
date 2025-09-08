@@ -10,7 +10,7 @@ export interface Prompt {
   title: string
   content: string
   description?: string
-  category: { id: string; name: string; description?: string }[]
+  categories: { id: string; name: string; description?: string }[]
   tags?: string[]
   notes?: string
   is_public: boolean

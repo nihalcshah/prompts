@@ -45,7 +45,7 @@ export default async function AdminDashboard() {
         </svg>
       ),
       href: "/admin/prompts",
-      color: "from-blue-500 to-blue-600",
+      color: "from-slate-700 to-slate-800",
     },
     {
       name: "Public Prompts",
@@ -66,7 +66,7 @@ export default async function AdminDashboard() {
         </svg>
       ),
       href: "/admin/prompts?filter=public",
-      color: "from-green-500 to-green-600",
+      color: "from-slate-600 to-slate-700",
     },
     {
       name: "Private Prompts",
@@ -87,7 +87,7 @@ export default async function AdminDashboard() {
         </svg>
       ),
       href: "/admin/prompts?filter=private",
-      color: "from-yellow-500 to-yellow-600",
+      color: "from-slate-500 to-slate-600",
     },
     {
       name: "Categories",
@@ -108,7 +108,7 @@ export default async function AdminDashboard() {
         </svg>
       ),
       href: "/admin/categories",
-      color: "from-purple-500 to-purple-600",
+      color: "from-slate-400 to-slate-500",
     },
   ];
 
@@ -132,7 +132,7 @@ export default async function AdminDashboard() {
           />
         </svg>
       ),
-      color: "from-blue-500 to-blue-600",
+      color: "from-indigo-600 to-indigo-700",
     },
     {
       name: "Manage Categories",
@@ -153,7 +153,7 @@ export default async function AdminDashboard() {
           />
         </svg>
       ),
-      color: "from-green-500 to-green-600",
+      color: "from-indigo-500 to-indigo-600",
     },
     {
       name: "Manage Tags",
@@ -174,7 +174,7 @@ export default async function AdminDashboard() {
           />
         </svg>
       ),
-      color: "from-purple-500 to-purple-600",
+      color: "from-indigo-400 to-indigo-500",
     },
     {
       name: "View Public Site",
@@ -201,7 +201,7 @@ export default async function AdminDashboard() {
           />
         </svg>
       ),
-      color: "from-neutral-500 to-neutral-600",
+      color: "from-slate-600 to-slate-700",
     },
   ];
 
@@ -222,7 +222,7 @@ export default async function AdminDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {stats.map((stat) => (
             <Link key={stat.name} href={stat.href} className="group block">
-              <div className="bg-neutral-950/50 backdrop-blur-sm border border-neutral-800/50 rounded-xl p-6 hover:border-neutral-700/50 transition-all duration-300 group-hover:scale-105 hover:bg-neutral-950/70">
+              <div className="bg-neutral-900/50 backdrop-blur-sm border border-neutral-800/50 rounded-xl p-6 hover:border-neutral-700/50 transition-all duration-300 group-hover:scale-105 hover:bg-neutral-900/70">
                 <div className="flex items-center">
                   <div
                     className={`flex-shrink-0 p-3 rounded-xl bg-gradient-to-r ${stat.color} text-white`}
@@ -253,7 +253,7 @@ export default async function AdminDashboard() {
                 href={action.href}
                 className="group block"
               >
-                <div className="bg-neutral-950/50 backdrop-blur-sm border border-neutral-800/50 rounded-xl p-6 hover:border-neutral-700/50 transition-all duration-300 group-hover:scale-105 hover:bg-neutral-950/70">
+                <div className="bg-neutral-900/50 backdrop-blur-sm border border-neutral-800/50 rounded-xl p-6 hover:border-neutral-700/50 transition-all duration-300 group-hover:scale-105 hover:bg-neutral-900/70">
                   <div
                     className={`inline-flex p-3 rounded-xl bg-gradient-to-r ${action.color} text-white mb-4`}
                   >
@@ -268,82 +268,6 @@ export default async function AdminDashboard() {
                 </div>
               </Link>
             ))}
-          </div>
-        </div>
-
-        {/* System Status */}
-        <div>
-          <h2 className="text-xl font-bold text-white mb-6">System Status</h2>
-          <div className="bg-neutral-950/50 backdrop-blur-sm border border-neutral-800/50 rounded-xl p-8">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="text-center">
-                <div className="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl mb-4 shadow-lg">
-                  <svg
-                    className="w-7 h-7 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"
-                    />
-                  </svg>
-                </div>
-                <h3 className="text-lg font-semibold text-white mb-2">
-                  Database
-                </h3>
-                <p className="text-sm text-neutral-400">
-                  Connected and operational
-                </p>
-              </div>
-              <div className="text-center">
-                <div className="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl mb-4 shadow-lg">
-                  <svg
-                    className="w-7 h-7 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                    />
-                  </svg>
-                </div>
-                <h3 className="text-lg font-semibold text-white mb-2">
-                  Authentication
-                </h3>
-                <p className="text-sm text-neutral-400">Secure and active</p>
-              </div>
-              <div className="text-center">
-                <div className="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl mb-4 shadow-lg">
-                  <svg
-                    className="w-7 h-7 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M13 10V3L4 14h7v7l9-11h-7z"
-                    />
-                  </svg>
-                </div>
-                <h3 className="text-lg font-semibold text-white mb-2">
-                  Performance
-                </h3>
-                <p className="text-sm text-neutral-400">
-                  Optimal response times
-                </p>
-              </div>
-            </div>
           </div>
         </div>
       </div>

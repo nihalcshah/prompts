@@ -34,7 +34,7 @@ export default function EditPromptForm({
     title: prompt.title,
     content: prompt.content,
     description: prompt.description || "",
-    category: prompt.category?.[0]?.id || "",
+    category: prompt.categories?.[0]?.name || "",
     tags: prompt.tags || [],
     notes: prompt.notes || "",
     is_public: prompt.is_public,

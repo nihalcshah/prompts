@@ -76,15 +76,15 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // Only protect /dashboard routes - redirect unauthenticated users to /signin
-  if (!user && request.nextUrl.pathname.startsWith("/dashboard")) {
+  // Only protect /admin routes - redirect unauthenticated users to /signin
+  if (!user && request.nextUrl.pathname.startsWith("/admin")) {
     const url = request.nextUrl.clone();
     url.pathname = "/signin";
     return NextResponse.redirect(url);
   }
 
   // For authenticated users accessing protected routes, ensure profile exists
-  if (user && request.nextUrl.pathname.startsWith("/dashboard")) {
+  if (user && request.nextUrl.pathname.startsWith("/admin")) {
     try {
       // Check if profile exists
       const { data: existingProfile, error: fetchError } = await supabase

@@ -335,7 +335,7 @@ export default function Navigation({ initialUser }: NavigationProps) {
                         Admin Dashboard
                       </Link>
                       <Link
-                        href="/dashboard"
+                        href="/admin"
                         className="flex items-center px-4 py-2 text-sm text-neutral-300 hover:bg-neutral-800 hover:text-white transition-colors duration-200"
                         onClick={() => setIsDropdownOpen(false)}
                       >
@@ -415,7 +415,7 @@ export default function Navigation({ initialUser }: NavigationProps) {
               <>
                 <div className="w-px h-4 bg-neutral-600 mx-4"></div>
                 <Link
-                  href="/dashboard"
+                  href="/admin"
                   className="text-sm text-neutral-400 hover:text-white transition-colors duration-200 whitespace-nowrap flex items-center gap-1"
                 >
                   Dashboard

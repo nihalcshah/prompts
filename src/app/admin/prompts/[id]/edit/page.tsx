@@ -15,19 +15,21 @@ interface EditPromptPageProps {
 }
 
 export default async function EditPromptPage({ params }: EditPromptPageProps) {
-  const supabase = await createClient();
+  // Await params before using its properties
+  const { id } = await params;
 
+  const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user || user.email !== "nihalcshah@gmail.com") {
+  if (!user) {
     redirect("/signin?error=unauthorized");
   }
 
   // Fetch prompt data and categories/tags
   const [promptResult, categoriesResult, tagsResult] = await Promise.all([
-    getPrompt(params.id),
+    getPrompt(id), // Use the awaited id instead of params.id
     getCategories(),
     getTags(),
   ]);
@@ -39,6 +41,11 @@ export default async function EditPromptPage({ params }: EditPromptPageProps) {
   const prompt = promptResult.data;
   const categories = categoriesResult.success ? categoriesResult.data : [];
   const tags = tagsResult.success ? tagsResult.data : [];
+
+  // Debug logging
+  console.log('Edit page - prompt data:', JSON.stringify(prompt, null, 2));
+  console.log('Edit page - categories:', categories);
+  console.log('Edit page - prompt categories:', prompt?.categories);
 
   return (
     <div className="max-w-4xl mx-auto">

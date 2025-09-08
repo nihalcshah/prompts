@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-
+import { GiEmptyChessboard, GiEmptyHourglass } from "react-icons/gi";
 interface Prompt {
   id: string;
   title: string;
@@ -64,26 +64,28 @@ export default function PublicClient({ prompts }: PublicClientProps) {
         <div className="mb-12">
           <div className="flex flex-col lg:flex-row gap-6 items-center justify-between">
             <div className="relative flex-1 max-w-xl">
-              <input
-                type="text"
-                placeholder="Search prompts, categories, or tags..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-6 py-4 pl-12 rounded-2xl border border-neutral-700/50 bg-neutral-950/30 backdrop-blur-sm text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 text-lg"
-              />
-              <svg
-                className="absolute left-4 top-4.5 h-6 w-6 text-neutral-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              <div className="flex items-center w-full rounded-2xl border border-neutral-700/50 bg-neutral-950/30 backdrop-blur-sm group focus-within:ring-2 focus-within:ring-white/50 transition-all duration-300">
+                <svg
+                  className="h-4 w-4 text-neutral-400 ml-4 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+                <input
+                  type="text"
+                  placeholder="Search prompts, categories, or tags..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full px-4 py-2.5 bg-transparent text-white placeholder-neutral-400 focus:outline-none transition-all duration-300 text-base"
                 />
-              </svg>
+              </div>
             </div>
 
             <div className="flex gap-3 flex-wrap justify-center">
@@ -118,19 +120,7 @@ export default function PublicClient({ prompts }: PublicClientProps) {
         {filteredPrompts.length === 0 ? (
           <div className="text-center py-12">
             <div className="mx-auto w-24 h-24 bg-neutral-800 rounded-full flex items-center justify-center mb-4">
-              <svg
-                className="w-12 h-12 text-neutral-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0118 12a8 8 0 10-8 8 7.962 7.962 0 014.291-1.709L16 16.172z"
-                />
-              </svg>
+              <GiEmptyHourglass className="w-12 h-12 text-neutral-400" />
             </div>
             <h3 className="text-lg font-medium text-neutral-300 mb-2">
               No prompts found
