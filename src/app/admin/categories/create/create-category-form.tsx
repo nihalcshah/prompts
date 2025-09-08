@@ -1,73 +1,78 @@
-'use client'
+"use client";
 
-import { useState, useTransition } from 'react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import { createCategory } from '@/app/actions/admin'
-import FormField, { FormError } from '@/components/form-field'
-import { validateFormWithResult, CommonValidationRules, type ValidationErrors } from '@/utils/validation'
+import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { createCategory } from "@/app/actions/admin";
+import FormField, { FormError } from "@/components/form-field";
+import {
+  validateFormWithResult,
+  CommonValidationRules,
+  type ValidationErrors,
+} from "@/utils/validation";
 
 export default function CreateCategoryForm() {
   const [formData, setFormData] = useState({
-    name: '',
-    description: ''
-  })
-  const [fieldErrors, setFieldErrors] = useState<ValidationErrors>({})
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState('')
-  const router = useRouter()
+    name: "",
+    description: "",
+  });
+  const [fieldErrors, setFieldErrors] = useState<ValidationErrors>({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const router = useRouter();
 
   const handleFieldChange = (name: string, value: string) => {
-    setFormData(prev => ({ ...prev, [name]: value }))
+    setFormData((prev) => ({ ...prev, [name]: value }));
     // Clear field error when user starts typing
     if (fieldErrors[name]) {
-      const newErrors = { ...fieldErrors }
-      delete newErrors[name]
-      setFieldErrors(newErrors)
+      const newErrors = { ...fieldErrors };
+      delete newErrors[name];
+      setFieldErrors(newErrors);
     }
-  }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
+    e.preventDefault();
+
     // Validate form
     const validation = validateFormWithResult(formData, {
       name: CommonValidationRules.categoryName,
-      description: CommonValidationRules.description
-    })
+      description: CommonValidationRules.description,
+    });
 
     if (!validation.isValid) {
-      setFieldErrors(validation.errors)
-      return
+      setFieldErrors(validation.errors);
+      return;
     }
 
-    setIsLoading(true)
-    setError('')
-    setFieldErrors({})
+    setIsLoading(true);
+    setError("");
+    setFieldErrors({});
 
     try {
-      const result = await createCategory({
-        name: formData.name.trim(),
-        description: formData.description.trim() || null
-      })
+      console.log(formData.name, formData.description);
+      const result = await createCategory(
+        formData.name.trim(),
+        formData.description.trim() || undefined
+      );
 
       if (result.success) {
-        router.push('/admin/categories')
+        router.push("/admin/categories");
       } else {
-        setError(result.error || 'Failed to create category')
+        setError(result.error || "Failed to create category");
       }
     } catch (err) {
-      setError('An unexpected error occurred')
+      setError("An unexpected error occurred");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="bg-gray-900/50 backdrop-blur-lg rounded-xl border border-gray-700/50 p-6">
       <form onSubmit={handleSubmit} className="space-y-6">
         <FormError error={error} />
-        
+
         <FormField
           label="Category Name"
           name="name"
@@ -102,7 +107,9 @@ export default function CreateCategoryForm() {
               </span>
             </div>
             {formData.description && (
-              <p className="text-gray-400 text-sm mt-2">{formData.description}</p>
+              <p className="text-gray-400 text-sm mt-2">
+                {formData.description}
+              </p>
             )}
           </div>
         )}
@@ -122,16 +129,41 @@ export default function CreateCategoryForm() {
           >
             {isLoading ? (
               <>
-                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                <svg
+                  className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
                 </svg>
                 Creating...
               </>
             ) : (
               <>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 4v16m8-8H4"
+                  />
                 </svg>
                 Create Category
               </>
@@ -140,5 +172,5 @@ export default function CreateCategoryForm() {
         </div>
       </form>
     </div>
-  )
+  );
 }

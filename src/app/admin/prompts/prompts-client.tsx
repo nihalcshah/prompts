@@ -330,10 +330,14 @@ export default function PromptsClient({
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      {prompt.category ? (
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-900 text-blue-200">
-                          {prompt.category}
-                        </span>
+                      {prompt.category && prompt.category.length > 0 ? (
+                        <div className="flex flex-wrap gap-1">
+                          {prompt.category.map((category) => (
+                            <span key={category.id} className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-900 text-blue-200">
+                              {category.name}
+                            </span>
+                          ))}
+                        </div>
                       ) : (
                         <span className="text-gray-500 text-sm">No category</span>
                       )}

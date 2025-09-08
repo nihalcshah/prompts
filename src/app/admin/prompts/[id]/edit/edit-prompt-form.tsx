@@ -5,10 +5,24 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { updatePrompt, type Prompt } from '@/app/actions/admin'
 
+interface Category {
+  id: string
+  name: string
+  description?: string
+  created_at: string
+}
+
+interface Tag {
+  id: string
+  name: string
+  description?: string
+  created_at: string
+}
+
 interface EditPromptFormProps {
   prompt: Prompt
-  categories: string[]
-  tags: string[]
+  categories: Category[]
+  tags: Tag[]
 }
 
 export default function EditPromptForm({ prompt, categories, tags }: EditPromptFormProps) {
@@ -16,7 +30,7 @@ export default function EditPromptForm({ prompt, categories, tags }: EditPromptF
     title: prompt.title,
     content: prompt.content,
     description: prompt.description || '',
-    category: prompt.category || '',
+    category: prompt.category?.[0]?.id || '',
     tags: prompt.tags || [],
     notes: prompt.notes || '',
     is_public: prompt.is_public
@@ -147,7 +161,7 @@ export default function EditPromptForm({ prompt, categories, tags }: EditPromptF
           >
             <option value="">Select a category</option>
             {categories.map(category => (
-              <option key={category} value={category}>{category}</option>
+              <option key={category.id} value={category.name}>{category.name}</option>
             ))}
           </select>
         </div>
@@ -184,24 +198,24 @@ export default function EditPromptForm({ prompt, categories, tags }: EditPromptF
                 <div className="flex flex-wrap gap-2">
                   {tags.map(tag => (
                     <button
-                      key={tag}
+                      key={tag.id}
                       type="button"
                       onClick={() => {
-                        if (!formData.tags.includes(tag)) {
+                        if (!formData.tags.includes(tag.name)) {
                           setFormData(prev => ({
                             ...prev,
-                            tags: [...prev.tags, tag]
+                            tags: [...prev.tags, tag.name]
                           }))
                         }
                       }}
                       className={`px-2 py-1 text-xs rounded transition-colors duration-200 ${
-                        formData.tags.includes(tag)
+                        formData.tags.includes(tag.name)
                           ? 'bg-blue-600 text-white cursor-not-allowed'
                           : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                       }`}
-                      disabled={formData.tags.includes(tag)}
+                      disabled={formData.tags.includes(tag.name)}
                     >
-                      #{tag}
+                      #{tag.name}
                     </button>
                   ))}
                 </div>

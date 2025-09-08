@@ -10,7 +10,9 @@ export const metadata = {
 export default async function CategoriesPage() {
   // Fetch all categories
   const categoriesResult = await getCategories()
-  const categories = categoriesResult.success ? categoriesResult.data : []
+  const categories = categoriesResult.success ? (categoriesResult.data || []) : []
+  
+  console.log('Categories data:', categories)
 
   return (
     <div className="p-6">
@@ -55,7 +57,7 @@ export default async function CategoriesPage() {
               <div>
                 <p className="text-gray-400 text-sm font-medium">Most Used</p>
                 <p className="text-lg font-semibold text-white mt-1">
-                  {categories.length > 0 ? categories[0] : 'None'}
+                  {categories.length > 0 ? categories[0].name : 'None'}
                 </p>
               </div>
               <div className="p-3 bg-green-500/20 rounded-lg">

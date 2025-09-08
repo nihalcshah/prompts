@@ -24,19 +24,19 @@ export default async function EditTagPage({ params }: EditTagPageProps) {
 
   const tagName = decodeURIComponent(params.name)
 
-  // Check if tag exists by looking for prompts that use this tag
-  const { data: prompts, error } = await supabase
-    .from('prompts')
+  // Check if tag exists in the tags table
+  const { data: tag, error } = await supabase
+    .from('tags')
     .select('id')
-    .contains('tags', [tagName])
-    .limit(1)
+    .eq('name', tagName)
+    .single()
 
   if (error) {
     console.error('Error checking tag:', error)
     redirect('/admin/tags?error=database')
   }
 
-  if (!prompts || prompts.length === 0) {
+  if (!tag) {
     redirect('/admin/tags?error=not-found')
   }
 

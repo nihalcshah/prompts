@@ -8,7 +8,7 @@ interface Prompt {
   title: string;
   content: string;
   description?: string;
-  category?: string;
+  categories?: { id: string; name: string; description?: string }[];
   tags?: string[];
   author: string;
   author_name?: string;
@@ -27,8 +27,10 @@ export default function PublicClient({ prompts }: PublicClientProps) {
   const categories = useMemo(() => {
     const cats = new Set(["All"]);
     prompts.forEach((prompt) => {
-      if (prompt.category) {
-        cats.add(prompt.category);
+      if (prompt.categories && prompt.categories.length > 0) {
+        prompt.categories.forEach((category) => {
+          cats.add(category.name);
+        });
       }
     });
     return Array.from(cats);
@@ -47,7 +49,8 @@ export default function PublicClient({ prompts }: PublicClientProps) {
         );
 
       const matchesCategory =
-        selectedCategory === "All" || prompt.category === selectedCategory;
+        selectedCategory === "All" || 
+        (prompt.categories && prompt.categories.some(cat => cat.name === selectedCategory));
 
       return matchesSearch && matchesCategory;
     });
@@ -173,10 +176,14 @@ export default function PublicClient({ prompts }: PublicClientProps) {
                   <h3 className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors duration-300 mb-3">
                     {prompt.title}
                   </h3>
-                  {prompt.category && (
-                    <span className="inline-block px-3 py-1.5 text-xs font-semibold bg-gradient-to-r from-purple-600/20 to-blue-600/20 text-purple-300 rounded-full border border-purple-500/30 backdrop-blur-sm">
-                      {prompt.category}
-                    </span>
+                  {prompt.categories && prompt.categories.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {prompt.categories.map((category) => (
+                        <span key={category.id} className="inline-block px-3 py-1.5 text-xs font-semibold bg-gradient-to-r from-purple-600/20 to-blue-600/20 text-purple-300 rounded-full border border-purple-500/30 backdrop-blur-sm">
+                          {category.name}
+                        </span>
+                      ))}
+                    </div>
                   )}
                 </div>
 

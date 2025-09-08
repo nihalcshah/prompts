@@ -10,7 +10,7 @@ export interface Prompt {
   title: string
   content: string
   description?: string
-  category?: string
+  category: { id: string; name: string; description?: string }[]
   tags?: string[]
   notes?: string
   is_public: boolean
@@ -63,8 +63,6 @@ export async function createPrompt(formData: FormData): Promise<ActionResult> {
         title,
         content,
         description: description || null,
-        category: category || null,
-        tags: tagsArray.length > 0 ? tagsArray : null,
         notes: notes || null,
         is_public: isPublic,
         author: user.email!,
@@ -78,11 +76,91 @@ export async function createPrompt(formData: FormData): Promise<ActionResult> {
     if (error) {
       return { success: false, error: error.message }
     }
-    
+
+    // Handle category relationship if provided
+    if (category && category.trim()) {
+      // Find or create the category
+      let categoryId: string
+      const { data: existingCategory } = await supabase
+        .from('categories')
+        .select('id')
+        .eq('name', category.trim())
+        .single()
+      
+      if (existingCategory) {
+        categoryId = existingCategory.id
+      } else {
+        // Create new category
+        const { data: newCategory, error: categoryError } = await supabase
+          .from('categories')
+          .insert({ name: category.trim() })
+          .select('id')
+          .single()
+        
+        if (categoryError) {
+          return { success: false, error: `Failed to create category: ${categoryError.message}` }
+        }
+        categoryId = newCategory.id
+      }
+      
+      // Create the relationship
+      const { error: relationError } = await supabase
+        .from('prompt_categories')
+        .insert({
+          prompt_id: data.id,
+          category_id: categoryId
+        })
+      
+      if (relationError) {
+        return { success: false, error: `Failed to link category: ${relationError.message}` }
+      }
+    }
+
+    // Handle tag relationships if provided
+    if (tagsArray.length > 0) {
+      for (const tagName of tagsArray) {
+        // Find or create the tag
+        let tagId: string
+        const { data: existingTag } = await supabase
+          .from('tags')
+          .select('id')
+          .eq('name', tagName)
+          .single()
+        
+        if (existingTag) {
+          tagId = existingTag.id
+        } else {
+          // Create new tag
+          const { data: newTag, error: tagError } = await supabase
+            .from('tags')
+            .insert({ name: tagName })
+            .select('id')
+            .single()
+          
+          if (tagError) {
+            return { success: false, error: `Failed to create tag: ${tagError.message}` }
+          }
+          tagId = newTag.id
+        }
+        
+        // Create the relationship
+        const { error: tagRelationError } = await supabase
+          .from('prompt_tags')
+          .insert({
+            prompt_id: data.id,
+            tag_id: tagId
+          })
+        
+        if (tagRelationError) {
+          return { success: false, error: `Failed to link tag: ${tagRelationError.message}` }
+        }
+      }
+    }
+
     revalidatePath('/admin/prompts')
     revalidatePath('/admin')
     revalidatePath('/public')
-    
+
     return { success: true, data }
   } catch (error) {
     console.error('Create prompt error:', error)
@@ -108,14 +186,13 @@ export async function updatePrompt(id: string, formData: FormData): Promise<Acti
     
     const tagsArray = tags ? tags.split(',').map(tag => tag.trim()).filter(Boolean) : []
     
+    // Update the prompt basic fields
     const { data, error } = await supabase
       .from('prompts')
       .update({
         title,
         content,
         description: description || null,
-        category: category || null,
-        tags: tagsArray.length > 0 ? tagsArray : null,
         notes: notes || null,
         is_public: isPublic,
         updated_at: new Date().toISOString()
@@ -126,6 +203,96 @@ export async function updatePrompt(id: string, formData: FormData): Promise<Acti
     
     if (error) {
       return { success: false, error: error.message }
+    }
+    
+    // Handle category relationships - remove existing and add new
+    await supabase
+      .from('prompt_categories')
+      .delete()
+      .eq('prompt_id', id)
+    
+    if (category && category.trim()) {
+      // Find or create the category
+      let categoryId: string
+      const { data: existingCategory } = await supabase
+        .from('categories')
+        .select('id')
+        .eq('name', category.trim())
+        .single()
+      
+      if (existingCategory) {
+        categoryId = existingCategory.id
+      } else {
+        // Create new category
+        const { data: newCategory, error: categoryError } = await supabase
+          .from('categories')
+          .insert({ name: category.trim() })
+          .select('id')
+          .single()
+        
+        if (categoryError) {
+          return { success: false, error: `Failed to create category: ${categoryError.message}` }
+        }
+        categoryId = newCategory.id
+      }
+      
+      // Create the relationship
+      const { error: relationError } = await supabase
+        .from('prompt_categories')
+        .insert({
+          prompt_id: id,
+          category_id: categoryId
+        })
+      
+      if (relationError) {
+        return { success: false, error: `Failed to link category: ${relationError.message}` }
+      }
+    }
+    
+    // Handle tag relationships - remove existing and add new
+    await supabase
+      .from('prompt_tags')
+      .delete()
+      .eq('prompt_id', id)
+    
+    if (tagsArray.length > 0) {
+      for (const tagName of tagsArray) {
+        // Find or create the tag
+        let tagId: string
+        const { data: existingTag } = await supabase
+          .from('tags')
+          .select('id')
+          .eq('name', tagName)
+          .single()
+        
+        if (existingTag) {
+          tagId = existingTag.id
+        } else {
+          // Create new tag
+          const { data: newTag, error: tagError } = await supabase
+            .from('tags')
+            .insert({ name: tagName })
+            .select('id')
+            .single()
+          
+          if (tagError) {
+            return { success: false, error: `Failed to create tag: ${tagError.message}` }
+          }
+          tagId = newTag.id
+        }
+        
+        // Create the relationship
+        const { error: tagRelationError } = await supabase
+          .from('prompt_tags')
+          .insert({
+            prompt_id: id,
+            tag_id: tagId
+          })
+        
+        if (tagRelationError) {
+          return { success: false, error: `Failed to link tag: ${tagRelationError.message}` }
+        }
+      }
     }
     
     revalidatePath('/admin/prompts')
@@ -175,19 +342,27 @@ export async function getPrompts(filters?: {
     
     let query = supabase
       .from('prompts')
-      .select('*')
+      .select(`
+        *,
+        prompt_categories(
+          categories(
+            id,
+            name,
+            description
+          )
+        ),
+        prompt_tags(
+          tags(
+            id,
+            name,
+            description
+          )
+        )
+      `)
       .order('created_at', { ascending: false })
     
     if (filters?.search) {
       query = query.or(`title.ilike.%${filters.search}%,content.ilike.%${filters.search}%,description.ilike.%${filters.search}%`)
-    }
-    
-    if (filters?.category) {
-      query = query.eq('category', filters.category)
-    }
-    
-    if (filters?.tag) {
-      query = query.contains('tags', [filters.tag])
     }
     
     if (filters?.isPublic !== undefined) {
@@ -200,7 +375,28 @@ export async function getPrompts(filters?: {
       return { success: false, error: error.message }
     }
     
-    return { success: true, data }
+    // Transform the data to flatten categories and tags
+    const transformedData = data?.map(prompt => ({
+      ...prompt,
+      categories: prompt.prompt_categories?.map((pc: any) => pc.categories) || [],
+      tags: prompt.prompt_tags?.map((pt: any) => pt.tags.name) || []
+    })) || []
+    
+    // Apply filters after fetching
+    let filteredData = transformedData
+    if (filters?.category) {
+      filteredData = filteredData.filter(prompt => 
+        prompt.categories.some((cat: any) => cat.name === filters.category)
+      )
+    }
+    
+    if (filters?.tag) {
+      filteredData = filteredData.filter(prompt => 
+        prompt.tags.includes(filters.tag)
+      )
+    }
+    
+    return { success: true, data: filteredData }
   } catch (error) {
     console.error('Get prompts error:', error)
     return { success: false, error: 'Internal server error' }
@@ -213,7 +409,11 @@ export async function getPrompt(id: string): Promise<ActionResult> {
     
     const { data, error } = await supabase
       .from('prompts')
-      .select('*')
+      .select(`
+        *,
+        prompt_categories(categories(id, name, description)),
+        prompt_tags(tags(name))
+      `)
       .eq('id', id)
       .single()
     
@@ -221,7 +421,18 @@ export async function getPrompt(id: string): Promise<ActionResult> {
       return { success: false, error: error.message }
     }
     
-    return { success: true, data }
+    // Transform the data to flatten categories and tags
+    const transformedData = {
+      ...data,
+      categories: data.prompt_categories?.map((pc: any) => pc.categories) || [],
+      tags: data.prompt_tags?.map((pt: any) => pt.tags.name) || []
+    }
+    
+    // Remove the junction table data
+    delete transformedData.prompt_categories
+    delete transformedData.prompt_tags
+    
+    return { success: true, data: transformedData }
   } catch (error) {
     console.error('Get prompt error:', error)
     return { success: false, error: 'Internal server error' }
@@ -253,7 +464,7 @@ export async function createCategory(name: string, description?: string): Promis
   try {
     const { supabase } = await verifyAdminAccess()
     
-    if (!name || !name.trim()) {
+    if (!name || typeof name !== 'string' || !name.trim()) {
       return { success: false, error: 'Category name is required' }
     }
     
@@ -310,18 +521,22 @@ export async function updateCategory(oldCategory: string, newCategory: string): 
       return { success: false, error: 'New category name must be different' }
     }
     
-    // Update all prompts that use the old category
+    // Update the category in the categories table
     const { data, error } = await supabase
-      .from('prompts')
+      .from('categories')
       .update({ 
-        category: newCategory,
+        name: newCategory,
         updated_at: new Date().toISOString()
       })
-      .eq('category', oldCategory)
+      .eq('name', oldCategory)
       .select()
     
     if (error) {
       return { success: false, error: error.message }
+    }
+    
+    if (!data || data.length === 0) {
+      return { success: false, error: 'Category not found' }
     }
     
     revalidatePath('/admin/categories')
@@ -344,15 +559,32 @@ export async function deleteCategory(category: string): Promise<ActionResult> {
       return { success: false, error: 'Category name is required' }
     }
     
-    // Update all prompts that use this category to remove the category
-    const { data, error } = await supabase
-      .from('prompts')
-      .update({ 
-        category: null,
-        updated_at: new Date().toISOString()
-      })
-      .eq('category', category)
-      .select()
+    // Get the category ID first
+    const { data: categoryData, error: fetchError } = await supabase
+      .from('categories')
+      .select('id')
+      .eq('name', category)
+      .single()
+    
+    if (fetchError) {
+      return { success: false, error: 'Category not found' }
+    }
+    
+    // Count how many prompts will be affected
+    const { data: affectedPrompts, error: countError } = await supabase
+      .from('prompt_categories')
+      .select('prompt_id')
+      .eq('category_id', categoryData.id)
+    
+    if (countError) {
+      return { success: false, error: countError.message }
+    }
+    
+    // Delete the category (this will cascade delete the relationships)
+    const { error } = await supabase
+      .from('categories')
+      .delete()
+      .eq('name', category)
     
     if (error) {
       return { success: false, error: error.message }
@@ -363,7 +595,7 @@ export async function deleteCategory(category: string): Promise<ActionResult> {
     revalidatePath('/admin')
     revalidatePath('/public')
     
-    return { success: true, data: { updated: data.length } }
+    return { success: true, data: { updated: affectedPrompts?.length || 0 } }
   } catch (error) {
     console.error('Delete category error:', error)
     return { success: false, error: 'Internal server error' }
@@ -433,7 +665,28 @@ export async function updateTag(oldTag: string, newTag: string, description?: st
       return { success: false, error: 'A tag with this name already exists' }
     }
     
-    // Update the tag in the tags table
+    // Check if the tag exists
+    const { data: tagToUpdate, error: tagCheckError } = await supabase
+      .from('tags')
+      .select('id')
+      .eq('name', oldTag)
+      .single()
+    
+    if (tagCheckError) {
+      return { success: false, error: 'Tag not found' }
+    }
+    
+    // Count how many prompts use this tag
+    const { count, error: countError } = await supabase
+      .from('prompt_tags')
+      .select('*', { count: 'exact', head: true })
+      .eq('tag_id', tagToUpdate.id)
+    
+    if (countError) {
+      return { success: false, error: countError.message }
+    }
+    
+    // Update the tag in the tags table (relationships will automatically reflect the new name)
     const { data: updatedTag, error: updateTagError } = await supabase
       .from('tags')
       .update({ 
@@ -448,39 +701,12 @@ export async function updateTag(oldTag: string, newTag: string, description?: st
       return { success: false, error: updateTagError.message }
     }
     
-    // Get all prompts that contain the old tag
-    const { data: prompts, error: fetchError } = await supabase
-      .from('prompts')
-      .select('id, tags')
-      .contains('tags', [oldTag])
-    
-    if (fetchError) {
-      return { success: false, error: fetchError.message }
-    }
-    
-    // Update each prompt's tags array
-    for (const prompt of prompts) {
-      const updatedTags = prompt.tags.map((tag: string) => tag === oldTag ? formattedNewTag : tag)
-      
-      const { error: updateError } = await supabase
-        .from('prompts')
-        .update({ 
-          tags: updatedTags,
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', prompt.id)
-      
-      if (updateError) {
-        return { success: false, error: updateError.message }
-      }
-    }
-    
     revalidatePath('/admin/tags')
     revalidatePath('/admin/prompts')
     revalidatePath('/admin')
     revalidatePath('/public')
     
-    return { success: true, data: { updated: prompts.length, tag: updatedTag } }
+    return { success: true, data: { updated: count || 0, tag: updatedTag } }
   } catch (error) {
     console.error('Update tag error:', error)
     return { success: false, error: 'Internal server error' }
@@ -495,34 +721,28 @@ export async function deleteTag(tag: string): Promise<ActionResult> {
       return { success: false, error: 'Tag name is required' }
     }
     
-    // Get all prompts that contain the tag
-    const { data: prompts, error: fetchError } = await supabase
-      .from('prompts')
-      .select('id, tags')
-      .contains('tags', [tag])
+    // Get the tag ID and count affected prompts
+    const { data: tagData, error: tagError } = await supabase
+      .from('tags')
+      .select('id')
+      .eq('name', tag)
+      .single()
     
-    if (fetchError) {
-      return { success: false, error: fetchError.message }
+    if (tagError) {
+      return { success: false, error: 'Tag not found' }
     }
     
-    // Remove the tag from each prompt's tags array
-    for (const prompt of prompts) {
-      const updatedTags = prompt.tags.filter((t: string) => t !== tag)
-      
-      const { error: updateError } = await supabase
-        .from('prompts')
-        .update({ 
-          tags: updatedTags.length > 0 ? updatedTags : null,
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', prompt.id)
-      
-      if (updateError) {
-        return { success: false, error: updateError.message }
-      }
+    // Count how many prompts use this tag
+    const { count, error: countError } = await supabase
+      .from('prompt_tags')
+      .select('*', { count: 'exact', head: true })
+      .eq('tag_id', tagData.id)
+    
+    if (countError) {
+      return { success: false, error: countError.message }
     }
     
-    // Delete the tag from the tags table
+    // Delete the tag from the tags table (CASCADE will remove relationships)
     const { error: deleteTagError } = await supabase
       .from('tags')
       .delete()
@@ -537,7 +757,7 @@ export async function deleteTag(tag: string): Promise<ActionResult> {
     revalidatePath('/admin')
     revalidatePath('/public')
     
-    return { success: true, data: { updated: prompts.length } }
+    return { success: true, data: { updated: count || 0 } }
   } catch (error) {
     console.error('Delete tag error:', error)
     return { success: false, error: 'Internal server error' }
@@ -601,7 +821,7 @@ export async function createTag(name: string, description?: string): Promise<Act
   try {
     const { supabase } = await verifyAdminAccess()
     
-    if (!name || !name.trim()) {
+    if (!name || typeof name !== 'string' || !name.trim()) {
       return { success: false, error: 'Tag name is required' }
     }
     
