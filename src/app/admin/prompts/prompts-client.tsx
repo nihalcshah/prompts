@@ -346,7 +346,7 @@ export default function PromptsClient({
                           {prompt.title}
                         </div>
                         {prompt.description && (
-                          <div className="text-sm text-neutral-400 mt-1 line-clamp-2">
+                          <div className="text-sm text-neutral-400 mt-1 line-clamp-2 h-10 flex items-start">
                             {prompt.description}
                           </div>
                         )}

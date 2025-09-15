@@ -203,7 +203,7 @@ export default function PublicClient({ prompts }: PublicClientProps) {
 
                 {/* Description */}
                 {prompt.description && (
-                  <p className="text-neutral-300 mb-6 line-clamp-2 relative z-10 leading-relaxed">
+                  <p className="text-neutral-300 mb-6 line-clamp-2 relative z-10 leading-relaxed h-12 flex items-start">
                     {prompt.description}
                   </p>
                 )}

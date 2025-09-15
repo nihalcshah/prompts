@@ -28,14 +28,14 @@ export default async function EditCategoryPage({
 
   const categoryName = decodeURIComponent(params.name);
 
-  // Verify the category exists by checking if any prompts use it
-  const { data: prompts } = await supabase
-    .from("prompts")
+  // Verify the category exists in the categories table
+  const { data: category } = await supabase
+    .from("categories")
     .select("id")
-    .eq("category", categoryName)
-    .limit(1);
+    .eq("name", categoryName)
+    .single();
 
-  if (!prompts || prompts.length === 0) {
+  if (!category) {
     redirect("/admin/categories");
   }
 

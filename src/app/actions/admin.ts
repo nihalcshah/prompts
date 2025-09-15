@@ -555,7 +555,7 @@ export async function createCategory(
       return { success: false, error: "Category name is required" };
     }
 
-    const categoryName = name.trim().toLowerCase().replace(/\s+/g, "-");
+    const categoryName = name.trim();
 
     // Check if category already exists
     const { data: existingCategory, error: checkError } = await supabase
@@ -620,7 +620,6 @@ export async function updateCategory(
       .from("categories")
       .update({
         name: newCategory,
-        updated_at: new Date().toISOString(),
       })
       .eq("name", oldCategory)
       .select();
