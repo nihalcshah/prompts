@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { GiEmptyHourglass } from "react-icons/gi";
 interface Prompt {
@@ -27,14 +27,14 @@ export default function PublicClient({ prompts }: PublicClientProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
 
-  // Transform prompts to flatten categories and tags
-  const transformedPrompts = useMemo(() => {
-    return prompts.map((prompt) => ({
-      ...prompt,
-      categories: prompt.prompt_categories?.map((pc) => pc.categories) || [],
-      tags: prompt.prompt_tags?.map((pt) => pt.tags.name) || [],
-    }));
+  useEffect(() => {
+    console.log("Client-side prompts:", prompts);
+    console.log("First prompt structure:", prompts[0]);
+    console.log("First prompt categories:", prompts[0]?.categories);
+    console.log("First prompt tags:", prompts[0]?.tags);
   }, [prompts]);
+  // Prompts are already transformed on the server side
+  const transformedPrompts = prompts;
 
   // Get unique categories from prompts
   const categories = useMemo(() => {
@@ -49,7 +49,10 @@ export default function PublicClient({ prompts }: PublicClientProps) {
     return Array.from(cats);
   }, [transformedPrompts]);
 
-  console.log(prompts, categories);
+  useEffect(() => {
+    console.log("transformedPrompts", transformedPrompts);
+  }, [transformedPrompts]);
+  // console.log(prompts, categories);
 
   // Filter prompts based on search and category
   const filteredPrompts = useMemo(() => {

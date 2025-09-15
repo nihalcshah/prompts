@@ -24,20 +24,12 @@ export default function SignInPage() {
     return ALLOWED_EMAILS.includes(email.toLowerCase());
   };
 
-  // Check for error from middleware (unauthorized OAuth signup) or auth callback
+  // Check for error from middleware (unauthorized OAuth signup)
   useEffect(() => {
     const errorParam = searchParams.get("error");
     if (errorParam === "unauthorized_email") {
       setError(
         "Account creation is restricted. Your email address is not authorized to access this application."
-      );
-      // Clear the error from URL
-      const newUrl = new URL(window.location.href);
-      newUrl.searchParams.delete("error");
-      window.history.replaceState({}, "", newUrl.toString());
-    } else if (errorParam === "auth_callback_error") {
-      setError(
-        "Authentication failed. Please try signing in again."
       );
       // Clear the error from URL
       const newUrl = new URL(window.location.href);
@@ -137,7 +129,7 @@ export default function SignInPage() {
             typeof window !== "undefined"
               ? window.location.origin
               : process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
-          }/api/auth/callback?next=/admin`,
+          }/admin`,
         },
       });
 
