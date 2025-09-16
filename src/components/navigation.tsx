@@ -189,47 +189,7 @@ export default function Navigation({ initialUser }: NavigationProps) {
             </div>
           </div>
 
-          {/* Categories Bar */}
-          <div className="border-t border-neutral-800">
-            <div className="flex items-center space-x-8 py-3 overflow-x-auto">
-              <Link
-                href="/"
-                className="text-sm text-neutral-400 hover:text-white transition-colors duration-200 whitespace-nowrap"
-              >
-                All Prompts
-              </Link>
-              <Link
-                href="/?category=creative"
-                className="text-sm text-neutral-400 hover:text-white transition-colors duration-200 whitespace-nowrap"
-              >
-                Creative
-              </Link>
-              <Link
-                href="/?category=coding"
-                className="text-sm text-neutral-400 hover:text-white transition-colors duration-200 whitespace-nowrap"
-              >
-                Coding
-              </Link>
-              <Link
-                href="/?category=business"
-                className="text-sm text-neutral-400 hover:text-white transition-colors duration-200 whitespace-nowrap"
-              >
-                Business
-              </Link>
-              <Link
-                href="/?category=education"
-                className="text-sm text-neutral-400 hover:text-white transition-colors duration-200 whitespace-nowrap"
-              >
-                Education
-              </Link>
-              <Link
-                href="/?category=research"
-                className="text-sm text-neutral-400 hover:text-white transition-colors duration-200 whitespace-nowrap"
-              >
-                Research
-              </Link>
-            </div>
-          </div>
+
         </div>
 
         {/* Mobile Search */}
@@ -393,55 +353,7 @@ export default function Navigation({ initialUser }: NavigationProps) {
           </div>
         </div>
 
-        {/* Categories Bar with Admin Items */}
-        <div className="border-t border-neutral-800">
-          <div className="flex items-center space-x-8 py-3 overflow-x-auto">
-            <Link
-              href="/"
-              className="text-sm text-neutral-400 hover:text-white transition-colors duration-200 whitespace-nowrap"
-            >
-              All Prompts
-            </Link>
-            {categories.slice(0, 3).map((category) => (
-              <Link
-                key={category.id}
-                href={`/?category=${category.name}`}
-                className="text-sm text-neutral-400 hover:text-white transition-colors duration-200 whitespace-nowrap capitalize"
-              >
-                {category.name.replace(/-/g, " ")}
-              </Link>
-            ))}
-            {user && (
-              <>
-                <div className="w-px h-4 bg-neutral-600 mx-4"></div>
-                <Link
-                  href="/admin"
-                  className="text-sm text-neutral-400 hover:text-white transition-colors duration-200 whitespace-nowrap flex items-center gap-1"
-                >
-                  Dashboard
-                </Link>
-                <Link
-                  href="/admin/prompts"
-                  className="text-sm text-neutral-400 hover:text-white transition-colors duration-200 whitespace-nowrap flex items-center gap-1"
-                >
-                  Prompts
-                </Link>
-                <Link
-                  href="/admin/categories"
-                  className="text-sm text-neutral-400 hover:text-white transition-colors duration-200 whitespace-nowrap flex items-center gap-1"
-                >
-                  Categories
-                </Link>
-                <Link
-                  href="/admin/tags"
-                  className="text-sm text-neutral-400 hover:text-white transition-colors duration-200 whitespace-nowrap flex items-center gap-1"
-                >
-                  Tags
-                </Link>
-              </>
-            )}
-          </div>
-        </div>
+
       </div>
     </nav>
   );

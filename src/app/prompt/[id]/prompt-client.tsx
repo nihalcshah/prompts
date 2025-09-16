@@ -3,6 +3,11 @@
 import Link from "next/link";
 import { useToast } from "@/components/toast";
 import { FaCopy, FaRegCopy } from "react-icons/fa6";
+import dynamic from "next/dynamic";
+
+const ShareButton = dynamic(() => import("@/components/share-button"), {
+  ssr: false,
+});
 
 interface Prompt {
   id: string;
@@ -59,10 +64,10 @@ export default function PromptClient({ prompt }: PromptClientProps) {
         </div>
 
         {/* Main Content */}
-        <div className="bg-neutral-950/80 backdrop-blur-lg rounded-2xl border border-neutral-700/50 overflow-hidden">
+        <div className="bg-neutral-950/80 backdrop-blur-lg rounded-2xl border border-neutral-700/50 overflow-visible">
           {/* Header */}
           <div className="p-8 border-b border-neutral-700">
-            <div className="flex items-start justify-between mb-4">
+            <div className="flex items-start justify-between mb-6">
               <div className="flex-1">
                 <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
                   {prompt.title}
@@ -70,6 +75,13 @@ export default function PromptClient({ prompt }: PromptClientProps) {
                 <p className="text-lg text-neutral-300 leading-relaxed">
                   {prompt.description}
                 </p>
+              </div>
+              <div className="flex-shrink-0">
+                <ShareButton
+                  title={prompt.title}
+                  description={prompt.description}
+                  promptId={prompt.id}
+                />
               </div>
             </div>
 
