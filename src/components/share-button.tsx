@@ -3,6 +3,8 @@
 import { useState, useRef, useEffect } from "react";
 import { useToast } from "@/components/toast";
 import dynamic from "next/dynamic";
+import { PiShareNetwork } from "react-icons/pi";
+import { MdIosShare } from "react-icons/md";
 
 interface ShareButtonProps {
   title: string;
@@ -24,7 +26,11 @@ export default function ShareButton({
   const { showToast } = useToast();
 
   // Generate the share URL
-  const shareUrl = url || (typeof window !== 'undefined' ? `${window.location.origin}/prompt/${promptId}` : `/prompt/${promptId}`);
+  const shareUrl =
+    url ||
+    (typeof window !== "undefined"
+      ? `${window.location.origin}/prompt/${promptId}`
+      : `/prompt/${promptId}`);
   const shareText = description || title;
 
   // Close dropdown when clicking outside
@@ -59,7 +65,7 @@ export default function ShareButton({
   };
 
   const shareViaWebAPI = async () => {
-    if (typeof navigator !== 'undefined' && 'share' in navigator) {
+    if (typeof navigator !== "undefined" && "share" in navigator) {
       try {
         await navigator.share({
           title,
@@ -67,8 +73,14 @@ export default function ShareButton({
           url: shareUrl,
         });
         setIsOpen(false);
-      } catch (err) {
-        console.error("Error sharing:", err);
+      } catch (err: any) {
+        // Don't show error for user cancellation
+        if (err.name !== "AbortError") {
+          console.error("Error sharing:", err);
+          showToast("Failed to share", "error");
+        }
+        // Close dropdown regardless of error type
+        setIsOpen(false);
       }
     }
   };
@@ -108,33 +120,22 @@ export default function ShareButton({
   return (
     <div className={`relative ${className}`} ref={dropdownRef}>
       <button
-        onClick={(e) => {
-          e.stopPropagation();
-          setIsOpen(!isOpen);
-        }}
-        className="p-2 text-neutral-500 hover:text-neutral-300 hover:bg-neutral-800/30 rounded-lg transition-all duration-200"
+        // onClick={(e) => {
+        //   e.stopPropagation();
+        //   setIsOpen(!isOpen);
+        // }}
+        onClick={shareViaWebAPI}
+        className="p-3 text-neutral-500 hover:text-neutral-300 hover:bg-neutral-800/30 rounded-lg transition-all duration-200 ring-1 ring-neutral-800"
         title="Share this prompt"
       >
-        <svg
-          className="w-4 h-4"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"
-          />
-        </svg>
+        <MdIosShare className="w-5 h-5" />
       </button>
 
       {isOpen && (
         <div className="absolute right-0 mt-2 w-56 bg-neutral-950 border border-neutral-700 rounded-lg shadow-xl z-[9999]">
           <div className="py-2">
             {/* Native Share API (if available) */}
-            {typeof navigator !== 'undefined' && 'share' in navigator && (
+            {typeof navigator !== "undefined" && "share" in navigator && (
               <>
                 <button
                   onClick={shareViaWebAPI}

@@ -182,8 +182,7 @@ export default function PublicClient({ prompts }: PublicClientProps) {
             {filteredPrompts.map((prompt) => (
               <div
                 key={prompt.id}
-                onClick={() => copyToClipboard(prompt.content)}
-                className="bg-gradient-to-br from-neutral-950/80 to-neutral-800/60 backdrop-blur-xl rounded-2xl border border-neutral-700/30 p-8 hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-500 hover:scale-[1.02] hover:border-blue-500/30 group relative overflow-visible flex flex-col h-full cursor-pointer"
+                className="bg-gradient-to-br from-neutral-950/80 to-neutral-800/60 backdrop-blur-xl rounded-2xl border border-neutral-700/30 p-8 hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-500 hover:scale-[1.02] hover:border-blue-500/30 group relative overflow-visible flex flex-col h-full"
               >
                 {/* Gradient overlay */}
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl" />
@@ -223,7 +222,10 @@ export default function PublicClient({ prompts }: PublicClientProps) {
                 )}
 
                 {/* Content Preview */}
-                <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 mb-6 border border-neutral-700/30 relative group-hover:bg-black/60 transition-colors duration-300">
+                <div
+                  onClick={() => copyToClipboard(prompt.content)}
+                  className="bg-black/40 backdrop-blur-sm rounded-xl p-4 mb-6 border border-neutral-700/30 relative group-hover:bg-black/60 transition-colors duration-300 cursor-pointer hover:border-blue-500/50"
+                >
                   <p className="text-sm text-neutral-200 line-clamp-3 font-mono leading-relaxed">
                     {prompt.content}
                   </p>
@@ -275,7 +277,7 @@ export default function PublicClient({ prompts }: PublicClientProps) {
                   <Link
                     href={`/prompt/${prompt.id}`}
                     onClick={(e) => e.stopPropagation()}
-                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-2 hover:scale-105 shadow-lg hover:shadow-blue-500/25"
+                    className="bg-gradient-to-r from-blue-600/40 to-purple-600/40 hover:from-blue-500 hover:to-purple-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-2 hover:scale-105 shadow-lg hover:shadow-blue-500/25"
                   >
                     View Details
                     <svg
