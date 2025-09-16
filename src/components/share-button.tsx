@@ -2,8 +2,6 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useToast } from "@/components/toast";
-import dynamic from "next/dynamic";
-import { PiShareNetwork } from "react-icons/pi";
 import { MdIosShare } from "react-icons/md";
 
 interface ShareButtonProps {
@@ -73,9 +71,9 @@ export default function ShareButton({
           url: shareUrl,
         });
         setIsOpen(false);
-      } catch (err: any) {
+      } catch (err: unknown) {
         // Don't show error for user cancellation
-        if (err.name !== "AbortError") {
+        if (err instanceof Error && err.name !== "AbortError") {
           console.error("Error sharing:", err);
           showToast("Failed to share", "error");
         }

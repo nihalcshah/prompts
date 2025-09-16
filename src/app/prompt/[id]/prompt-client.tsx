@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useToast } from "@/components/toast";
-import { FaCopy, FaRegCopy } from "react-icons/fa6";
+import { FaRegCopy } from "react-icons/fa6";
 import dynamic from "next/dynamic";
 
 const ShareButton = dynamic(() => import("@/components/share-button"), {

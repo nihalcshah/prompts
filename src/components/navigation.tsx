@@ -127,7 +127,7 @@ export default function Navigation({ initialUser }: NavigationProps) {
             </div>
 
             {/* Search Bar */}
-            <div className="flex-1 max-w-lg mx-8 hidden md:block">
+            {/* <div className="flex-1 max-w-lg mx-8 hidden md:block">
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <svg
@@ -150,7 +150,7 @@ export default function Navigation({ initialUser }: NavigationProps) {
                   className="block w-full pl-10 pr-3 py-2 border border-neutral-700 rounded-lg bg-neutral-950/50 text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-white transition-colors duration-200 text-sm"
                 />
               </div>
-            </div>
+            </div> */}
 
             {/* User Menu - Show based on initialUser */}
             <div className="flex items-center space-x-4">
@@ -188,8 +188,6 @@ export default function Navigation({ initialUser }: NavigationProps) {
               )}
             </div>
           </div>
-
-
         </div>
 
         {/* Mobile Search */}
@@ -216,6 +214,49 @@ export default function Navigation({ initialUser }: NavigationProps) {
                 placeholder="Search prompts..."
                 className="block w-full pl-10 pr-3 py-2 border border-neutral-700 rounded-lg bg-neutral-950/50 text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-white transition-colors duration-200 text-sm"
               />
+            </div>
+          </div>
+        </div>
+
+        {/* Categories Bar with Admin Items */}
+        <div className="border-t border-neutral-800">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center space-x-8 py-3 overflow-x-auto">
+              <Link
+                href="/"
+                className="text-sm text-neutral-400 hover:text-white transition-colors duration-200 whitespace-nowrap"
+              >
+                All Prompts
+              </Link>
+              {initialUser && (
+                <>
+                  <div className="w-px h-4 bg-neutral-600 mx-4"></div>
+                  <Link
+                    href="/admin"
+                    className="text-sm text-neutral-400 hover:text-white transition-colors duration-200 whitespace-nowrap flex items-center gap-1"
+                  >
+                    Dashboard
+                  </Link>
+                  <Link
+                    href="/admin/prompts"
+                    className="text-sm text-neutral-400 hover:text-white transition-colors duration-200 whitespace-nowrap flex items-center gap-1"
+                  >
+                    Prompts
+                  </Link>
+                  <Link
+                    href="/admin/categories"
+                    className="text-sm text-neutral-400 hover:text-white transition-colors duration-200 whitespace-nowrap flex items-center gap-1"
+                  >
+                    Categories
+                  </Link>
+                  <Link
+                    href="/admin/tags"
+                    className="text-sm text-neutral-400 hover:text-white transition-colors duration-200 whitespace-nowrap flex items-center gap-1"
+                  >
+                    Tags
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -352,8 +393,49 @@ export default function Navigation({ initialUser }: NavigationProps) {
             )}
           </div>
         </div>
+      </div>
 
-
+      {/* Categories Bar with Admin Items */}
+      <div className="border-t border-neutral-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center space-x-8 py-3 overflow-x-auto">
+            <Link
+              href="/"
+              className="text-sm text-neutral-400 hover:text-white transition-colors duration-200 whitespace-nowrap"
+            >
+              All Prompts
+            </Link>
+            {user && (
+              <>
+                <div className="w-px h-4 bg-neutral-600 mx-4"></div>
+                <Link
+                  href="/admin"
+                  className="text-sm text-neutral-400 hover:text-white transition-colors duration-200 whitespace-nowrap flex items-center gap-1"
+                >
+                  Dashboard
+                </Link>
+                <Link
+                  href="/admin/prompts"
+                  className="text-sm text-neutral-400 hover:text-white transition-colors duration-200 whitespace-nowrap flex items-center gap-1"
+                >
+                  Prompts
+                </Link>
+                <Link
+                  href="/admin/categories"
+                  className="text-sm text-neutral-400 hover:text-white transition-colors duration-200 whitespace-nowrap flex items-center gap-1"
+                >
+                  Categories
+                </Link>
+                <Link
+                  href="/admin/tags"
+                  className="text-sm text-neutral-400 hover:text-white transition-colors duration-200 whitespace-nowrap flex items-center gap-1"
+                >
+                  Tags
+                </Link>
+              </>
+            )}
+          </div>
+        </div>
       </div>
     </nav>
   );

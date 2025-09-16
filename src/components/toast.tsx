@@ -14,6 +14,13 @@ function ToastComponent({ message, type = "success", duration = 3000, onClose }:
   const [isVisible, setIsVisible] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 
+  const handleClose = () => {
+    setIsVisible(false);
+    setTimeout(() => {
+      onClose();
+    }, 300); // Wait for animation to complete
+  };
+
   useEffect(() => {
     setIsMounted(true);
     // Trigger animation after mount
@@ -28,14 +35,7 @@ function ToastComponent({ message, type = "success", duration = 3000, onClose }:
       }, duration);
       return () => clearTimeout(timer);
     }
-  }, [duration]);
-
-  const handleClose = () => {
-    setIsVisible(false);
-    setTimeout(() => {
-      onClose();
-    }, 300); // Wait for animation to complete
-  };
+  }, [duration, handleClose]);
 
   const getToastStyles = () => {
     const baseStyles = "px-6 py-4 rounded-lg shadow-lg border backdrop-blur-sm font-medium text-sm flex items-center gap-3 min-w-[300px] max-w-[400px]";

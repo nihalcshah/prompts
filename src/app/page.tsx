@@ -33,8 +33,8 @@ export default async function Home() {
   // Transform and flatten the data for client component
   const transformedPrompts = (prompts || []).map((prompt) => ({
     ...prompt,
-    categories: prompt.prompt_categories?.map((pc: any) => pc.categories) || [],
-    tags: prompt.prompt_tags?.map((pt: any) => pt.tags.name) || [],
+    categories: prompt.prompt_categories?.map((pc: { categories: { id: string; name: string; description?: string } }) => pc.categories) || [],
+    tags: prompt.prompt_tags?.map((pt: { tags: { id: string; name: string } }) => pt.tags.name) || [],
   }));
   
   return <PublicClient prompts={transformedPrompts} />
